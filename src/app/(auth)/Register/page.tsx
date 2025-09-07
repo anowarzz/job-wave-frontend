@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import registerData from "@/data/register.json";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Lottie from "lottie-react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -196,12 +197,12 @@ const Register = () => {
 
                   <div className="flex items-center justify-end">
                     <div className="text-sm">
-                      <a
-                        href="/auth/Login"
+                      <Link
+                        href="/login"
                         className="font-medium text-primary hover:text-primary/80 hover:underline"
                       >
                         Already have an account?
-                      </a>
+                      </Link>
                     </div>
                   </div>
 

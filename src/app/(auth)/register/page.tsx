@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -153,7 +154,7 @@ const Register = () => {
                         <FormControl>
                           <div className="grid grid-cols-2 gap-3">
                             <div
-                              className={`cursor-pointer rounded-lg transition-all duration-200 p-2 flex flex-col items-center justify-center border-2 ${
+                              className={`cursor-pointer rounded-lg transition-all duration-200  flex flex-col items-center justify-center border-2 ${
                                 field.value === "applicant"
                                   ? "bg-primary/10 border-primary text-primary"
                                   : "bg-card border-border hover:bg-accent text-muted-foreground hover:text-foreground"
@@ -188,7 +189,7 @@ const Register = () => {
                               />
                             </div>
                             <div
-                              className={`cursor-pointer rounded-lg transition-all duration-200 p-2 flex flex-col items-center justify-center border-2 ${
+                              className={`cursor-pointer rounded-lg transition-all duration-200  flex flex-col items-center justify-center border-2 ${
                                 field.value === "recruiter"
                                   ? "bg-primary/10 border-primary text-primary"
                                   : "bg-card border-border hover:bg-accent text-muted-foreground hover:text-foreground"
@@ -231,12 +232,12 @@ const Register = () => {
 
                   <div className="flex items-center justify-end">
                     <div className="text-sm">
-                      <a
-                        href="/auth/Login"
+                      <Link
+                        href="/login"
                         className="font-medium text-primary hover:text-primary/80 hover:underline"
                       >
                         Already have an account?
-                      </a>
+                      </Link>
                     </div>
                   </div>
 
