@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import Link from "next/link";
 import { ModeToggle } from "../ui/ModeToogle";
 
 // Navigation links array to be used in both desktop and mobile menus
@@ -104,6 +105,9 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <ModeToggle />
           </div>
+          <Link href="/register">
+            <Button size="sm" className="">Register</Button>
+          </Link>
           {/* User menu */}
           <UserMenu />
         </div>
