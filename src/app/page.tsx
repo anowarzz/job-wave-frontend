@@ -1,6 +1,8 @@
 import HeroSection from "@/components/Home/HeroSection";
+import HotJobs from "@/components/Home/HotJobs";
 import HowItWorks from "@/components/Home/HowItWorks";
 import JobsCategoryBrowse from "@/components/Home/JobCategories";
+import FAQ from "./faq/page";
 
 export default function Home() {
   return (
@@ -8,6 +10,8 @@ export default function Home() {
       <HeroSection />
       <HowItWorks />
       <JobsCategoryBrowse />
+      <HotJobs />
+      <FAQ />
     </div>
   );
 }
