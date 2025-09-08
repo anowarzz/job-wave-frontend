@@ -2,9 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Lottie from "lottie-react";
-import { useTheme } from "next-themes";
+import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 import loginData from "../../../data/login.json";
 
@@ -28,8 +30,9 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const Login = () => {
-  const { theme } = useTheme();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -39,14 +42,40 @@ const Login = () => {
     },
   });
 
+  // Handle Login
   const onSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
+
+    const API_BASE_URL =
+      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1";
+
     try {
-      // Handle login logic here
-      console.log("Login data:", values);
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
-    } catch (error) {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.log(data);
+        return toast.error(data.message || "Login failed");
+      }
+
+      toast.success("Login successful");
+
+      // Redirect to home page
+      router.push("/");
+    } catch (error: any) {
       console.error("Login error:", error);
+      toast.error(error.message || "Invalid credentials. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -103,11 +132,25 @@ const Login = () => {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Enter your password"
-                            {...field}
-                          />
+                          <div className="relative">
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Enter your password"
+                              {...field}
+                              className="pr-10"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                              {showPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
+                            </button>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
