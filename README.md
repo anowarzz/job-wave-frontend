@@ -1,36 +1,163 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Job Wave - Modern Job Portal Platform
+
+Job Wave is a comprehensive job portal platform designed to connect job seekers with employers seamlessly. Built with modern web technologies, it provides an intuitive interface for candidates to find opportunities and for recruiters to discover talent.
+
+## 🌐 Live Demo
+
+**[Visit Job Wave](https://jobwave-dun.vercel.app/register)** - Experience the platform live on Vercel
+
+## Project Overview
+
+Job Wave serves as a bridge between talented professionals and companies looking to hire. The platform offers role-based dashboards with distinct functionalities for different user types:
+
+**For Job Seekers (Candidates):**
+
+- Browse and search through available job listings
+- Create detailed profiles showcasing skills and experience
+- Apply to jobs that match their expertise
+- Track application status and manage their job search journey
+
+**For Employers (Recruiters):**
+
+- Post job openings with detailed requirements
+- Manage and track posted positions
+- Review and filter job applications
+- Access analytics to understand recruitment performance
+
+**For Platform Administrators:**
+
+- Comprehensive dashboard with platform analytics
+- Manage all users (candidates and recruiters)
+- Oversee job postings and applications
+- Monitor platform activity and user engagement
+
+The platform emphasizes user experience with a clean, modern interface that works seamlessly across devices. It features real-time notifications, advanced search capabilities, and detailed analytics to help users make informed decisions.
+
+## Tech Stack
+
+**Frontend Framework:**
+
+- **Next.js 15** - React framework with server-side rendering and app router
+- **React 19** - Latest version with improved performance and features
+- **TypeScript** - Type safety and better developer experience
+
+**Styling & UI:**
+
+- **Tailwind CSS 4** - Utility-first CSS framework for rapid styling
+- **Radix UI** - Unstyled, accessible components for complex UI patterns
+- **Lucide React** - Beautiful icon library with consistent design
+- **Framer Motion** - Smooth animations and interactive transitions
+
+**State Management & Data Fetching:**
+
+- **SWR** - Data fetching library with caching and revalidation
+- **React Hook Form** - Performant forms with easy validation
+- **Zod** - Schema validation for type-safe data handling
+
+**Development & Build Tools:**
+
+- **Turbopack** - Fast bundler for development and production builds
+- **ESLint** - Code linting for consistent code quality
+- **PostCSS** - CSS processing and optimization
+
+**Additional Features:**
+
+- **next-themes** - Dark/light theme switching with system preference detection
+- **Sonner** - Beautiful toast notifications
+- **Class Variance Authority** - Utility for creating consistent component variants
+
+## Key Features
+
+- **Multi-role Authentication** - Separate interfaces for candidates, recruiters, and admins
+- **Responsive Design** - Fully optimized for desktop, tablet, and mobile devices
+- **Dark/Light Mode** - Theme switching with system preference detection
+- **Real-time Notifications** - Instant updates on application status and new opportunities
+- **Advanced Search** - Filter jobs by location, type, skills, and salary range
+- **Analytics Dashboard** - Comprehensive insights for recruiters and administrators
+- **Profile Management** - Detailed user profiles with skill showcasing
+- **Application Tracking** - Monitor job applications from submission to hiring
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+Before running this project, make sure you have the following installed:
+
+- **Node.js** (version 18 or higher)
+- **pnpm** (recommended package manager)
+
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/anowarzz/job-wave-frontend.git
+   cd job-wave-frontend
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up environment variables**
+   Create a `.env.local` file in the root directory and add your environment variables:
+
+   ```env
+   NEXT_PUBLIC_API_URL=your_backend_api_url
+   # Add other environment variables as needed
+   ```
+
+4. **Run the development server**
+
+   ```bash
+   pnpm dev
+   ```
+
+5. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000) to see the application running.
+
+### Build for Production
+
+To create a production build:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+To start the production server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Code Quality
 
-## Learn More
+Run the linter to check code quality:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/                    # Next.js app router pages
+│   ├── (auth)/            # Authentication routes
+│   ├── (dashboard)/       # Dashboard routes for different roles
+│   └── ...                # Other pages (about, contact, jobs)
+├── components/            # Reusable UI components
+│   ├── ui/               # Base UI components (buttons, forms, etc.)
+│   ├── layout/           # Layout components
+│   └── ...               # Feature-specific components
+├── constants/            # Application constants and configurations
+├── hooks/               # Custom React hooks
+├── lib/                 # Utility functions and configurations
+└── types/               # TypeScript type definitions
+```
 
-## Deploy on Vercel
+#
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
