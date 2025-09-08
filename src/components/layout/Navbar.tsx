@@ -1,3 +1,5 @@
+"use client";
+
 import Logo from "@/components/navbar-components/logo";
 import UserMenu from "@/components/navbar-components/user-menu";
 import { Button } from "@/components/ui/button";
@@ -13,7 +15,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Link from "next/link";
-import { ModeToggle } from "../ui/ModeToogle";
+import useSWR from "swr";
+import { ModeToggle } from "../ui/ModeToggle";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -25,6 +28,10 @@ const navigationLinks = [
 ];
 
 export default function Navbar() {
+  const { data: userData, isLoading } = useSWR("/user/me");
+
+  const user = userData?.data;
+
   return (
     <header className="border-b px-4 md:px-6">
       <div className="flex h-16 items-center justify-between gap-4">
@@ -105,11 +112,26 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             <ModeToggle />
           </div>
-          <Link href="/register">
-            <Button size="sm" className="">Register</Button>
-          </Link>
-          {/* User menu */}
-          <UserMenu />
+
+          {/* Conditional rendering with loading state */}
+          {isLoading ? (
+            <div className="w-8 h-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          ) : user && user.email ? (
+        
+            <UserMenu user={user}/>
+          ) : (
+         
+            <div className="flex items-center gap-2">
+              <Link href="/login">
+                <Button size="sm" variant="outline">
+                  Login
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button size="sm">Register</Button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </header>

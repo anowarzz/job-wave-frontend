@@ -4,7 +4,9 @@ const API_BASE_URL =
 export const fetcher = async (url: string) => {
   const fullUrl = url.startsWith("http") ? url : `${API_BASE_URL}${url}`;
 
-  const res = await fetch(fullUrl);
+  const res = await fetch(fullUrl, {
+    credentials: "include",
+  });
 
   if (!res.ok) {
     throw new Error("Failed to fetch data");
