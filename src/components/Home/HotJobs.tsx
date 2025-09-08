@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 import { motion } from "framer-motion";
 import { Briefcase, FireExtinguisher } from "lucide-react";

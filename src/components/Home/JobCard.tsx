@@ -1,4 +1,4 @@
-/* eslint-disable no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { IJob } from "@/types";
 import { Bookmark, Clock, DollarSign, MapPin } from "lucide-react";

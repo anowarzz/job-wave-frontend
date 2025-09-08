@@ -1,5 +1,5 @@
 "use client";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -89,7 +89,7 @@ const MyApplications = () => {
     console.log("Search query:", searchQuery);
   };
 
-  const filteredApplications = applications.filter((app) => {
+  const filteredApplications = applications.filter((app: any) => {
     const companyName =
       app.job.company?.name || app.job.recruiter?.name || "Unknown Company";
     const matchesSearch =
@@ -104,12 +104,12 @@ const MyApplications = () => {
   const stats = {
     total: applications.length,
     underReview: applications.filter(
-      (app) => app.status === "pending" || app.status === "under-review"
+      (app:any) => app.status === "pending" || app.status === "under-review"
     ).length,
     interviews: applications.filter(
-      (app) => app.status === "interview-scheduled"
+      (app:any) => app.status === "interview-scheduled"
     ).length,
-    accepted: applications.filter((app) => app.status === "accepted").length,
+    accepted: applications.filter((app:any) => app.status === "accepted").length,
   };
 
   // Handle error state
@@ -313,7 +313,7 @@ const MyApplications = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredApplications.map((application) => {
+                {filteredApplications.map((application:any) => {
                   const companyName =
                     application.job.company?.name ||
                     application.job.recruiter?.name ||
