@@ -1,11 +1,10 @@
-import Footer from "@/components/layout/Footer";
-import Navbar from "@/components/layout/Navbar";
+import { ConditionalLayout } from "@/components/layout/conditional-layout";
 import { SWRProvider } from "@/components/providers/swr-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 import { Toaster } from "sonner";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,14 +38,8 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SWRProvider>
-            <main className="min-h-screen flex flex-col">
-              <Toaster position="top-center"/>
-              <Navbar />
-
-              <div className="flex-1">{children}</div>
-
-              <Footer />
-            </main>
+            <Toaster position="top-center" />
+            <ConditionalLayout>{children}</ConditionalLayout>
           </SWRProvider>
         </ThemeProvider>
       </body>

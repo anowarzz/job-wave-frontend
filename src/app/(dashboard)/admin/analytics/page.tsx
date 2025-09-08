@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Briefcase, FileText, TrendingUp, Users } from "lucide-react";
 
-const Admin = () => {
+const AdminAnalytics = () => {
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
@@ -111,4 +111,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default AdminAnalytics;
