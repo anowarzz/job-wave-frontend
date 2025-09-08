@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 import useSWR from "swr";
 
 const JobDetails = () => {
@@ -27,6 +29,42 @@ const JobDetails = () => {
   const { data, error, isLoading } = useSWR(`/jobs/${jobId}`);
 
   const job: IJob = data?.data;
+
+  // State for apply functionality
+  const [isApplying, setIsApplying] = useState(false);
+  const [hasApplied, setHasApplied] = useState(false);
+
+  // Apply for job function
+  const applyForJob = async () => {
+    if (!job || hasApplied) return;
+
+    setIsApplying(true);
+    try {
+      const API_BASE_URL =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1";
+
+      const response = await fetch(`${API_BASE_URL}/candidate/apply/${jobId}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setHasApplied(true);
+        toast.success("Application submitted successfully!");
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Failed to apply for the job");
+      }
+    } catch (error) {
+      console.error("Apply error:", error);
+      toast.error("An error occurred while applying. Please try again.");
+    } finally {
+      setIsApplying(false);
+    }
+  };
 
   if (error) {
     return (
@@ -223,12 +261,21 @@ const JobDetails = () => {
               <Button
                 className="w-full"
                 size="lg"
-                disabled={job.status !== "open"}
+                disabled={job.status !== "open" || hasApplied || isApplying}
+                onClick={applyForJob}
               >
-                {job.status === "open" ? "Apply Now" : "Job Closed"}
+                {isApplying
+                  ? "Applying..."
+                  : hasApplied
+                  ? "Applied"
+                  : job.status === "open"
+                  ? "Apply Now"
+                  : "Job Closed"}
               </Button>
               <p className="text-xs text-muted-foreground text-center mt-2">
-                Quick and easy application process
+                {hasApplied
+                  ? "Your application has been submitted"
+                  : "Quick and easy application process"}
               </p>
             </CardContent>
           </Card>
