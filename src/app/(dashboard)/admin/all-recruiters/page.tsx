@@ -1,5 +1,5 @@
 "use client";
-
+ 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,7 +32,6 @@ const AllRecruiters = () => {
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // You can use searchQuery here for your search functionality
     console.log("Search query:", searchQuery);
   };
 

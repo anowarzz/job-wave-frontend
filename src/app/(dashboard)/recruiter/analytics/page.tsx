@@ -134,7 +134,7 @@ const RecruiterAnalytics = () => {
               {data?.data.totalJobsPosted || 0}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Jobs you've posted
+              Jobs you&apos;ve posted
             </p>
           </CardContent>
         </Card>

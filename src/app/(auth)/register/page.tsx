@@ -1,9 +1,8 @@
 "use client";
-
+ 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Lottie from "lottie-react";
 import { Eye, EyeOff } from "lucide-react";
-import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -47,7 +46,7 @@ const registerSchema = z
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const Register = () => {
-  const { theme } = useTheme();
+  // Remove unused theme variable
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);

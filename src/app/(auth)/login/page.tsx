@@ -1,5 +1,5 @@
 "use client";
-
+ 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Lottie from "lottie-react";
 import { Eye, EyeOff } from "lucide-react";
@@ -70,7 +70,7 @@ const Login = () => {
         return toast.error(data.message || "Login failed");
       }
 
-      toast.success("Login successful", {position: "bottom-right"});
+      toast.success("Login successful", { position: "bottom-right" });
 
       // Invalidate user data cache to update navbar
       mutate("/user/me");
@@ -167,7 +167,7 @@ const Login = () => {
                         href="/register"
                         className="font-medium text-primary hover:text-primary/80 hover:underline"
                       >
-                        Don't have an account?
+                        Don&apos;t have an account?
                       </Link>
                     </div>
                   </div>

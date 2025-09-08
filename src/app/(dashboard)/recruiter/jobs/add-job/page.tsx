@@ -91,13 +91,13 @@ const AddNewJob = () => {
         try {
           const errorData = await response.json();
           errorMessage = errorData.message || errorMessage;
-        } catch (parseError) {
+        } catch {
           errorMessage = `Failed to create job posting: ${response.status} ${response.statusText}`;
         }
         throw new Error(errorMessage);
       }
 
-      const result = await response.json();
+      await response.json();
 
       // Show success toast
       toast.success("Job posting created successfully!", {

@@ -1,10 +1,10 @@
+ 
 import { UserRole } from "@/types";
 import {
   BarChart3,
   Briefcase,
   Building2,
   File,
-  FileText,
   PlusCircle,
   User,
 } from "lucide-react";

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { FileText, Search, Trophy, UserPlus } from "lucide-react";
 
 const HowItWorks = () => {
@@ -39,7 +39,7 @@ const HowItWorks = () => {
     },
   ];
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -49,14 +49,14 @@ const HowItWorks = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.6,
-        ease: [0.42, 0, 0.58, 1], 
+        ease: "easeInOut",
       },
     },
   };

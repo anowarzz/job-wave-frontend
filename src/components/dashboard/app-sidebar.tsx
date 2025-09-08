@@ -1,5 +1,5 @@
 "use client";
-
+ 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -26,7 +26,7 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { setOpenMobile, isMobile } = useSidebar();
 
-  const { data, isLoading } = useSWR("/user/me");
+  const { data } = useSWR("/user/me");
   const user = data?.data;
 
   const navigationItems = user?.role
