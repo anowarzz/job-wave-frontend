@@ -27,11 +27,18 @@ export type TJobType =
   | "freelance"
   | "internship";
 
+export type TJobStatus = "open" | "closed";
+
 export interface IJob {
+  _id: string;
   title: string;
   description: string;
+  recruiter?: string;
   jobType: TJobType;
   requiredSkills: string[];
   location: string;
+  status: TJobStatus;
   salaryRange: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

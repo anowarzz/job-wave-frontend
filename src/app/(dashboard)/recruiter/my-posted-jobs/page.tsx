@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -15,31 +17,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { fetcher } from "@/lib/fetcher";
+import { IJob } from "@/types";
 import { ChevronDown, Filter, Loader2, Search } from "lucide-react";
 import useSWR from "swr";
 
-// Type for posted jobs response
-interface PostedJob {
-  _id: string;
-  title: string;
-  description: string;
-  jobType: string;
-  requiredSkills: string[];
-  location: string;
-  salaryRange: string;
-  status: "active" | "inactive" | "draft";
-  applicationsCount?: number;
-  createdAt: string;
-  updatedAt: string;
-  company?: string;
-}
-
 const MyPostedJobs = () => {
-  const {
-    data: jobs,
-    error,
-    isLoading,
-  } = useSWR<PostedJob[]>("/recruiter/my-posted-jobs", fetcher);
+  const { data, error, isLoading } = useSWR(
+    "/recruiter/my-posted-jobs",
+    fetcher
+  );
+
+  const jobs = data?.data || [];
 
   if (error) {
     return (
@@ -51,6 +39,13 @@ const MyPostedJobs = () => {
           <p className="text-muted-foreground">
             Failed to load your posted jobs. Please try again later.
           </p>
+          <Button
+            onClick={() => window.location.reload()}
+            className="mt-4"
+            variant="outline"
+          >
+            Try Again
+          </Button>
         </div>
       </div>
     );
@@ -84,26 +79,8 @@ const MyPostedJobs = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem>All Status</DropdownMenuItem>
-              <DropdownMenuItem>Active</DropdownMenuItem>
-              <DropdownMenuItem>Inactive</DropdownMenuItem>
-              <DropdownMenuItem>Draft</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-[140px]">
-                Location
-                <ChevronDown className="h-4 w-4 ml-2" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>All Locations</DropdownMenuItem>
-              <DropdownMenuItem>San Francisco, CA</DropdownMenuItem>
-              <DropdownMenuItem>New York, NY</DropdownMenuItem>
-              <DropdownMenuItem>Austin, TX</DropdownMenuItem>
-              <DropdownMenuItem>Los Angeles, CA</DropdownMenuItem>
-              <DropdownMenuItem>Seattle, WA</DropdownMenuItem>
+              <DropdownMenuItem>Open</DropdownMenuItem>
+              <DropdownMenuItem>Closed</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -140,14 +117,13 @@ const MyPostedJobs = () => {
                 <TableHead>Location</TableHead>
                 <TableHead>Posted Date</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Applications</TableHead>
                 <TableHead>Salary Range</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {jobs && jobs.length > 0 ? (
-                jobs.map((job) => (
+                jobs.map((job: IJob) => (
                   <TableRow key={job._id}>
                     <TableCell className="font-medium">{job.title}</TableCell>
                     <TableCell className="capitalize">
@@ -160,9 +136,9 @@ const MyPostedJobs = () => {
                     <TableCell>
                       <span
                         className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          job.status === "active"
+                          job.status === "open"
                             ? "bg-green-100 text-green-800"
-                            : job.status === "inactive"
+                            : job.status === "closed"
                             ? "bg-red-100 text-red-800"
                             : "bg-gray-100 text-gray-800"
                         }`}
@@ -171,7 +147,6 @@ const MyPostedJobs = () => {
                           job.status.slice(1)}
                       </span>
                     </TableCell>
-                    <TableCell>{job.applicationsCount || 0}</TableCell>
                     <TableCell>{job.salaryRange}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
@@ -185,7 +160,6 @@ const MyPostedJobs = () => {
                           <DropdownMenuItem>View Details</DropdownMenuItem>
                           <DropdownMenuItem>Edit Job</DropdownMenuItem>
                           <DropdownMenuItem>View Applications</DropdownMenuItem>
-                          <DropdownMenuItem>Duplicate</DropdownMenuItem>
                           <DropdownMenuItem className="text-red-600">
                             Delete
                           </DropdownMenuItem>
