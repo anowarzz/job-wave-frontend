@@ -128,7 +128,7 @@ const AllCandidates = () => {
             <TableBody>
               {candidates.length > 0 ? (
                 candidates.map((candidate: any) => (
-                  <TableRow key={candidate.id}>
+                  <TableRow key={candidate._id}>
                     <TableCell>
                       <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">

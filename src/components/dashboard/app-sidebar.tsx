@@ -12,6 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { BarChart3, Briefcase, User, Users } from "lucide-react";
 import Link from "next/link";
@@ -45,15 +46,23 @@ const adminNavItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { setOpenMobile, isMobile } = useSidebar();
 
   const { data, isLoading } = useSWR("/user/me");
   const user = data?.data;
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+    // On desktop, do nothing - keep sidebar open
+  };
 
   return (
     <Sidebar variant="sidebar" className="border-r">
       <SidebarHeader className="border-b px-6 py-4">
         <div className="flex items-center gap-2">
-          <Link href="/">
+          <Link href="/" onClick={handleLinkClick}>
             <div className="text-xl font-bold">
               <span className="text-gray-800 dark:text-gray-200">Job</span>
               <span className="bg-gradient-to-r from-primary to-blue-500 dark:from-purple-400 dark:to-blue-400 bg-clip-text text-transparent">
@@ -76,7 +85,11 @@ export function AppSidebar() {
                     isActive={pathname === item.url}
                     className="w-full"
                   >
-                    <Link href={item.url} className="flex items-center gap-2">
+                    <Link
+                      href={item.url}
+                      className="flex items-center gap-2"
+                      onClick={handleLinkClick}
+                    >
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
                     </Link>
