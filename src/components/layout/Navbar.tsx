@@ -20,11 +20,14 @@ import { ModeToggle } from "../ui/ModeToggle";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "#", label: "Home" },
-  { href: "#", label: "Find Jobs" },
-  { href: "#", label: "About" },
-  { href: "#", label: "Contact" },
-  { href: "#", label: "FAQ" },
+  { href: "/", label: "Home" },
+  { href: "/jobs", label: "Find Jobs" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/candidate", label: "Candidate Dashboard" },
+  { href: "/recruiter", label: "Recruiter Dashboard" },
+  { href: "/admin", label: "Admin Dashboard" },
+  { href: "/faq", label: "FAQ" },
 ];
 
 export default function Navbar() {
@@ -77,9 +80,11 @@ export default function Navbar() {
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                   {navigationLinks.map((link, index) => (
                     <NavigationMenuItem key={index} className="w-full">
-                      <NavigationMenuLink href={link.href} className="py-1.5">
-                        {link.label}
-                      </NavigationMenuLink>
+                      <Link href={link.href}>
+                        <NavigationMenuLink className="py-1.5">
+                          {link.label}
+                        </NavigationMenuLink>
+                      </Link>
                     </NavigationMenuItem>
                   ))}
                 </NavigationMenuList>
@@ -95,12 +100,11 @@ export default function Navbar() {
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
-                    <NavigationMenuLink
-                      href={link.href}
-                      className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-                    >
-                      {link.label}
-                    </NavigationMenuLink>
+                    <Link href={link.href}>
+                      <NavigationMenuLink className="text-muted-foreground hover:text-primary py-1.5 font-medium">
+                        {link.label}
+                      </NavigationMenuLink>
+                    </Link>
                   </NavigationMenuItem>
                 ))}
               </NavigationMenuList>
@@ -117,10 +121,8 @@ export default function Navbar() {
           {isLoading ? (
             <div className="w-8 h-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           ) : user && user.email ? (
-        
-            <UserMenu user={user}/>
+            <UserMenu user={user} />
           ) : (
-         
             <div className="flex items-center gap-2">
               <Link href="/login">
                 <Button size="sm" variant="outline">
