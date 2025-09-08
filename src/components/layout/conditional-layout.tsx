@@ -15,7 +15,9 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const isDashboardRoute =
     pathname.startsWith("/admin") ||
     pathname.startsWith("/candidate") ||
-    pathname.startsWith("/recruiter");
+    pathname.startsWith("/recruiter") ||
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/user/profile");
 
   if (isDashboardRoute) {
     // Dashboard layout - no navbar/footer, full height
