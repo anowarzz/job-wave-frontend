@@ -10,39 +10,45 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { UserRole } from "@/types";
 import Link from "next/link";
+import React, { useState } from "react";
 import useSWR from "swr";
 import { ModeToggle } from "../ui/ModeToggle";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
-  { href: "/", label: "Home" },
-  { href: "/jobs", label: "Find Jobs" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-  { href: "/candidate", label: "Candidate Dashboard" },
-  { href: "/recruiter", label: "Recruiter Dashboard" },
-  { href: "/admin", label: "Admin Dashboard" },
-  { href: "/faq", label: "FAQ" },
+  { href: "/", label: "Home", role: "PUBLIC" },
+  { href: "/jobs", label: "Find Jobs", role: "PUBLIC" },
+  { href: "/about", label: "About", role: "PUBLIC" },
+  { href: "/contact", label: "Contact", role: "PUBLIC" },
+  { href: "/faq", label: "FAQ", role: "PUBLIC" },
+  { href: "/candidate", label: "Dashboard", role: UserRole.CANDIDATE },
+  { href: "/recruiter", label: "Dashboard", role: UserRole.RECRUITER },
+  { href: "/admin", label: "Dashboard", role: UserRole.ADMIN },
 ];
 
 export default function Navbar() {
   const { data: userData, isLoading } = useSWR("/user/me");
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const user = userData?.data;
+  const userRole = user?.role;
 
   return (
-    <header className="border-b px-4 md:px-6">
+    <header className="sticky top-0 z-50 border-b px-4 md:px-6 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex items-center gap-2">
           {/* Mobile menu trigger */}
-          <Popover>
-            <PopoverTrigger asChild>
+          <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+            <SheetTrigger asChild>
               <Button
                 className="group size-8 md:hidden"
                 variant="ghost"
@@ -74,21 +80,78 @@ export default function Navbar() {
                   />
                 </svg>
               </Button>
-            </PopoverTrigger>
-            <PopoverContent align="start" className="w-36 p-1 md:hidden">
-              <NavigationMenu className="max-w-none *:w-full">
-                <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+              <SheetHeader>
+                <SheetTitle className="text-left">
+                  <Logo />
+                </SheetTitle>
+              </SheetHeader>
+              <div className="mt-6">
+                <nav className="flex flex-col space-y-4">
                   {navigationLinks.map((link, index) => (
-                    <NavigationMenuItem key={index} className="w-full">
-                      <Link className="py-1.5" href={link.href}>
-                        {link.label}
-                      </Link>
-                    </NavigationMenuItem>
+                    <React.Fragment key={index}>
+                      {link.role === "PUBLIC" && (
+                        <Link
+                          href={link.href}
+                          className="text-foreground hover:text-primary transition-colors font-medium py-2 px-4 rounded-md hover:bg-accent"
+                          onClick={() => setSheetOpen(false)}
+                        >
+                          {link.label}
+                        </Link>
+                      )}
+                      {link.role === userRole && (
+                        <Link
+                          href={link.href}
+                          className="text-foreground hover:text-primary transition-colors font-medium py-2 px-4 rounded-md hover:bg-accent"
+                          onClick={() => setSheetOpen(false)}
+                        >
+                          {link.label}
+                        </Link>
+                      )}
+                    </React.Fragment>
                   ))}
-                </NavigationMenuList>
-              </NavigationMenu>
-            </PopoverContent>
-          </Popover>
+                </nav>
+                <div className="mt-6 pt-6 border-t">
+                  <div className="flex flex-col space-y-4 px-4">
+                    {isLoading ? (
+                      <div className="w-8 h-8 animate-spin rounded-full border-2 border-primary border-t-transparent mx-auto" />
+                    ) : user && user.email ? (
+                      <div className="flex flex-col space-y-3 items-center">
+                        <div className="text-sm text-muted-foreground text-center px-2">
+                          Signed in as{" "}
+                          <span className="font-medium">{user.email}</span>
+                        </div>
+                        <div className="w-full flex justify-center">
+                          <UserMenu user={user} />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col space-y-2">
+                        <Link href="/login" onClick={() => setSheetOpen(false)}>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="w-full"
+                          >
+                            Login
+                          </Button>
+                        </Link>
+                        <Link
+                          href="/register"
+                          onClick={() => setSheetOpen(false)}
+                        >
+                          <Button size="sm" className="w-full">
+                            Register
+                          </Button>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
           {/* Main nav */}
           <div className="flex items-center gap-6">
             <Logo />
@@ -97,16 +160,32 @@ export default function Navbar() {
             <NavigationMenu className="max-md:hidden">
               <NavigationMenuList className="gap-2">
                 {navigationLinks.map((link, index) => (
-                  <NavigationMenuItem key={index}>
-                    <NavigationMenuLink asChild>
-                      <Link
-                        href={link.href}
-                        className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-                      >
-                        {link.label}
-                      </Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
+                  <React.Fragment key={index}>
+                    {link.role === "PUBLIC" && (
+                      <NavigationMenuItem>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            href={link.href}
+                            className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                          >
+                            {link.label}
+                          </Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
+                    {link.role === userRole && (
+                      <NavigationMenuItem>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            href={link.href}
+                            className="text-muted-foreground hover:text-primary py-1.5 font-medium"
+                          >
+                            {link.label}
+                          </Link>
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
+                  </React.Fragment>
                 ))}
               </NavigationMenuList>
             </NavigationMenu>

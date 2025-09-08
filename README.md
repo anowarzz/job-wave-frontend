@@ -4,7 +4,7 @@ Job Wave is a comprehensive job portal platform designed to connect job seekers 
 
 ## 🌐 Live Demo
 
-**[Visit Job Wave](https://jobwave-dun.vercel.app/register)** - Experience the platform live on Vercel
+**[Visit Job Wave](https://jobwave-dun.vercel.app)** - Experience the platform live on Vercel
 
 ## Project Overview
 
