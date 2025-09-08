@@ -3,6 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -11,13 +12,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Mail, MapPin, Shield, ShieldOff, Trash2, User } from "lucide-react";
+import {
+  Mail,
+  MapPin,
+  Search,
+  Shield,
+  ShieldOff,
+  Trash2,
+  User,
+} from "lucide-react";
+import { useState } from "react";
 import useSWR from "swr";
 
 const AllCandidates = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const { data, error, isLoading } = useSWR("/admin/all-candidates");
 
   const candidates = data?.data || [];
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // You can use searchQuery here for your search functionality
+    console.log("Search query:", searchQuery);
+  };
 
   if (isLoading) {
     return (
@@ -114,7 +131,20 @@ const AllCandidates = () => {
         <CardHeader>
           <CardTitle>Candidates List</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          {/* Search Bar */}
+          <form onSubmit={handleSearchSubmit}>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search candidates by name, email, or address..."
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </form>
+
           <Table>
             <TableHeader>
               <TableRow>
