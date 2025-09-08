@@ -2,8 +2,19 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import useSWR from "swr";
 
 const HeroSection = () => {
+
+
+const {data}  = useSWR("/jobs/all-jobs");
+
+console.log(data);
+
+
+
+
+
   return (
     <div className="relative overflow-hidden min-h-[85vh] md:min-h-[80vh] lg:min-h-[85vh] flex items-center">
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900 z-0"></div>

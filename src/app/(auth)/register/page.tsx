@@ -3,8 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Lottie from "lottie-react";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 import registerData from "../../../data/register.json";
 
@@ -20,23 +22,32 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
-const registerSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Please enter a valid email address"),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-    ),
-  role: z.enum(["applicant", "recruiter"], "Please select a role"),
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Please enter a valid email address"),
+    password: z
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+      ),
+    confirmPassword: z.string().min(6, {
+      message: "Confirm Password must be at least 6 characters",
+    }),
+    role: z.enum(["CANDIDATE", "RECRUITER"], "Please select a role"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Password do not match",
+    path: ["confirmPassword"],
+  });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const Register = () => {
   const { theme } = useTheme();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<RegisterFormValues>({
@@ -45,18 +56,44 @@ const Register = () => {
       name: "",
       email: "",
       password: "",
-      role: "applicant",
+      confirmPassword: "",
+      role: "CANDIDATE",
     },
   });
 
   const onSubmit = async (values: RegisterFormValues) => {
     setIsLoading(true);
+
+    const API_BASE_URL =
+      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1";
+
     try {
-      // Handle registration logic here
-      console.log("Registration data:", values);
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate API call
-    } catch (error) {
+      const response = await fetch(`${API_BASE_URL}/user/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          password: values.confirmPassword,
+          role: values.role,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+
+      toast.success(
+        "Registration successful! Please login with your credentials."
+      );
+      router.push("/login");
+    } catch (error: any) {
       console.error("Registration error:", error);
+      toast.error(error.message || "Something went wrong during registration");
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +130,7 @@ const Register = () => {
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Applicant Name  /  Company Name</FormLabel>
+                        <FormLabel>Applicant Name / Company Name</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Enter your full name"
@@ -139,8 +176,26 @@ const Register = () => {
                         <FormMessage />
                         <p className="text-xs text-muted-foreground">
                           Password must be at least 6 characters with one
-                          uppercase letter and one number
+                          uppercase letter, one lowercase letter, and one number
                         </p>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="password"
+                            placeholder="Confirm your password"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -155,11 +210,11 @@ const Register = () => {
                           <div className="grid grid-cols-2 gap-3">
                             <div
                               className={`cursor-pointer rounded-lg transition-all duration-200  flex flex-col items-center justify-center border-2 ${
-                                field.value === "applicant"
+                                field.value === "CANDIDATE"
                                   ? "bg-primary/10 border-primary text-primary"
                                   : "bg-card border-border hover:bg-accent text-muted-foreground hover:text-foreground"
                               }`}
-                              onClick={() => field.onChange("applicant")}
+                              onClick={() => field.onChange("CANDIDATE")}
                             >
                               <div className="text-lg mb-0.5">
                                 <svg
@@ -182,19 +237,19 @@ const Register = () => {
                               </span>
                               <input
                                 type="radio"
-                                value="applicant"
-                                checked={field.value === "applicant"}
-                                onChange={() => field.onChange("applicant")}
+                                value="CANDIDATE"
+                                checked={field.value === "CANDIDATE"}
+                                onChange={() => field.onChange("CANDIDATE")}
                                 className="sr-only"
                               />
                             </div>
                             <div
                               className={`cursor-pointer rounded-lg transition-all duration-200  flex flex-col items-center justify-center border-2 ${
-                                field.value === "recruiter"
+                                field.value === "RECRUITER"
                                   ? "bg-primary/10 border-primary text-primary"
                                   : "bg-card border-border hover:bg-accent text-muted-foreground hover:text-foreground"
                               }`}
-                              onClick={() => field.onChange("recruiter")}
+                              onClick={() => field.onChange("RECRUITER")}
                             >
                               <div className="text-lg mb-0.5">
                                 <svg
@@ -217,9 +272,9 @@ const Register = () => {
                               </span>
                               <input
                                 type="radio"
-                                value="recruiter"
-                                checked={field.value === "recruiter"}
-                                onChange={() => field.onChange("recruiter")}
+                                value="RECRUITER"
+                                checked={field.value === "RECRUITER"}
+                                onChange={() => field.onChange("RECRUITER")}
                                 className="sr-only"
                               />
                             </div>
