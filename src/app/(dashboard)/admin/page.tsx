@@ -7,36 +7,92 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Briefcase, FileText, TrendingUp, Users } from "lucide-react";
+import { Briefcase, FileText, Users } from "lucide-react";
+import useSWR from "swr";
 
-const Admin = () => {
+const AdminAnalytics = () => {
+  const { data, error, isLoading } = useSWR("/admin/analytics");
+  const analytics = data?.data || {};
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <Card key={i}>
+              <CardContent className="p-6">
+                <div className="animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-center text-red-600">
+              Error loading analytics: {error.message}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Candidates
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,234</div>
+            <div className="text-2xl font-bold">
+              {analytics.totalCandidates || 0}
+            </div>
             <p className="text-xs text-muted-foreground">
-              +20.1% from last month
+              Registered candidates
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Jobs</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Recruiters
+            </CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {analytics.totalRecruiters || 0}
+            </div>
+            <p className="text-xs text-muted-foreground">Active recruiters</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Job Posts</CardTitle>
             <Briefcase className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">567</div>
-            <p className="text-xs text-muted-foreground">
-              +12.3% from last month
-            </p>
+            <div className="text-2xl font-bold">
+              {analytics.totalJobPosts || 0}
+            </div>
+            <p className="text-xs text-muted-foreground">Total job postings</p>
           </CardContent>
         </Card>
 
@@ -46,23 +102,10 @@ const Admin = () => {
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">2,890</div>
-            <p className="text-xs text-muted-foreground">
-              +8.7% from last month
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Growth Rate</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24.5%</div>
-            <p className="text-xs text-muted-foreground">
-              +4.2% from last month
-            </p>
+            <div className="text-2xl font-bold">
+              {analytics.totalApplications || 0}
+            </div>
+            <p className="text-xs text-muted-foreground">Total applications</p>
           </CardContent>
         </Card>
       </div>
@@ -111,4 +154,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default AdminAnalytics;

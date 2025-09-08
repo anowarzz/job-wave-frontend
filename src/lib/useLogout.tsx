@@ -15,8 +15,13 @@ export const logout = async () => {
       throw new Error("Logout failed");
     }
 
-    // Invalidate user data cache
+    mutate("/user/me", null, false);
+
+   
     mutate("/user/me");
+
+    // Show success toast
+    toast.success("Logged out successfully!");
 
     // Return success, navigation handled in component
     return true;

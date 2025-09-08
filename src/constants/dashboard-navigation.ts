@@ -55,7 +55,7 @@ export const DASHBOARD_NAVIGATION: RoleNavigation[] = [
     items: [
       {
         title: "My Applications",
-        url: "/candidate/applications",
+        url: "/candidate/my-applications",
         icon: File,
       },
     ],
