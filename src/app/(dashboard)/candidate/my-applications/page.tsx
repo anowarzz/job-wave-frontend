@@ -40,6 +40,8 @@ import { useState } from "react";
 import useSWR from "swr";
 
 const getStatusColor = (status: string) => {
+  if (!status) return "secondary";
+
   switch (status.toLowerCase()) {
     case "accepted":
       return "default";
@@ -56,6 +58,8 @@ const getStatusColor = (status: string) => {
 };
 
 const formatStatus = (status: string) => {
+  if (!status) return "Unknown";
+
   switch (status.toLowerCase()) {
     case "pending":
       return "Under Review";
@@ -97,19 +101,24 @@ const MyApplications = () => {
       companyName.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus =
       statusFilter === "all" ||
-      app.status.toLowerCase().replace("-", "-") === statusFilter;
+      (app.status &&
+        app.status.toLowerCase().replace("-", "-") === statusFilter);
     return matchesSearch && matchesStatus;
   });
 
   const stats = {
     total: applications.length,
     underReview: applications.filter(
-      (app:any) => app.status === "pending" || app.status === "under-review"
+      (app: any) =>
+        app.status &&
+        (app.status === "pending" || app.status === "under-review")
     ).length,
     interviews: applications.filter(
-      (app:any) => app.status === "interview-scheduled"
+      (app: any) => app.status && app.status === "interview-scheduled"
     ).length,
-    accepted: applications.filter((app:any) => app.status === "accepted").length,
+    accepted: applications.filter(
+      (app: any) => app.status && app.status === "accepted"
+    ).length,
   };
 
   // Handle error state
@@ -313,7 +322,7 @@ const MyApplications = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredApplications.map((application:any) => {
+                {filteredApplications.map((application: any) => {
                   const companyName =
                     application.job.company?.name ||
                     application.job.recruiter?.name ||
