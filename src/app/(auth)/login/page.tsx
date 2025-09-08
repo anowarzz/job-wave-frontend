@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { mutate } from "swr";
 import * as z from "zod";
 import loginData from "../../../data/login.json";
 
@@ -69,7 +70,10 @@ const Login = () => {
         return toast.error(data.message || "Login failed");
       }
 
-      toast.success("Login successful");
+      toast.success("Login successful", {position: "bottom-right"});
+
+      // Invalidate user data cache to update navbar
+      mutate("/user/me");
 
       // Redirect to home page
       router.push("/");

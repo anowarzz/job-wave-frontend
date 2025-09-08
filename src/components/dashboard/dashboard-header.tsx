@@ -2,23 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { logout } from "@/lib/useLogout";
+import { IUser } from "@/types";
 import { LogOut, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import useSWR from "swr";
 
 interface DashboardHeaderProps {
   title?: string;
   description?: string;
   actions?: React.ReactNode;
 }
-
-// Mock user data - will be replaced with real user context
-const mockUser = {
-  name: "John Doe",
-  email: "john.doe@example.com",
-  role: "ADMIN",
-};
 
 export function DashboardHeader({
   title,
@@ -27,6 +23,12 @@ export function DashboardHeader({
 }: DashboardHeaderProps) {
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Fetch current user data
+  const { data, error, isLoading } = useSWR("/user/me");
+
+  const user = data?.data;
 
   // Auto-generate title from pathname if not provided
   const getPageTitle = () => {
@@ -54,7 +56,10 @@ export function DashboardHeader({
   const getPageDescription = () => {
     if (description) return description;
 
-    const role = mockUser.role.toLowerCase();
+    if (isLoading) return "Loading...";
+    if (error || !user) return "Welcome to your dashboard";
+
+    const role = user.role.toLowerCase();
     return `Welcome to your ${role} dashboard`;
   };
 
@@ -62,9 +67,14 @@ export function DashboardHeader({
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  const handleLogout = () => {
-    // Add logout logic here
-    console.log("Logging out...");
+  // Logout
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
@@ -102,7 +112,7 @@ export function DashboardHeader({
 
         {/* User Profile Icon */}
         <Button variant="ghost" size="icon" asChild>
-          <Link href="/profile">
+          <Link href="/user/profile">
             <User className="h-4 w-4" />
             <span className="sr-only">Profile</span>
           </Link>

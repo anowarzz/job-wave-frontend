@@ -11,10 +11,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { logout } from "@/lib/useLogout";
 import { IUser } from "@/types";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function UserMenu({ user }: { user: IUser }) {
+  const router = useRouter();
+
+  // Handle Logout
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push("/");
+    } catch (error) {
+        console.log("Logout error:", error);
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -41,14 +55,14 @@ export default function UserMenu({ user }: { user: IUser }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href="/profile" className="flex items-center gap-2 w-full">
+            <Link href="/user/profile" className="flex items-center gap-2 w-full">
               <User size={16} className="opacity-60" aria-hidden="true" />
               <span>Profile</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
           <span>Logout</span>
         </DropdownMenuItem>
