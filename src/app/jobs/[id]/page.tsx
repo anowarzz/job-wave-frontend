@@ -1,18 +1,18 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { IJob } from "@/types";
 import {
-  MapPin,
-  Clock,
-  DollarSign,
-  Building,
-  Calendar,
   ArrowLeft,
   Bookmark,
+  Building,
+  Calendar,
+  Clock,
+  DollarSign,
+  MapPin,
   Share2,
 } from "lucide-react";
 import Link from "next/link";
@@ -79,9 +79,7 @@ const JobDetails = () => {
 
   // Format job type
   const formatJobType = (jobType: string) => {
-    return jobType
-      .replace("-", " ")
-      .replace(/\b\w/g, (l) => l.toUpperCase());
+    return jobType.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase());
   };
 
   return (
@@ -173,7 +171,9 @@ const JobDetails = () => {
                 <MapPin className="h-5 w-5 text-muted-foreground" />
                 <div>
                   <p className="font-medium">Location</p>
-                  <p className="text-sm text-muted-foreground">{job.location}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {job.location}
+                  </p>
                 </div>
               </div>
 
@@ -207,7 +207,9 @@ const JobDetails = () => {
                 <Calendar className="h-5 w-5 text-muted-foreground" />
                 <div>
                   <p className="font-medium">Status</p>
-                  <Badge variant={job.status === "open" ? "default" : "secondary"}>
+                  <Badge
+                    variant={job.status === "open" ? "default" : "secondary"}
+                  >
                     {job.status === "open" ? "Open" : "Closed"}
                   </Badge>
                 </div>
