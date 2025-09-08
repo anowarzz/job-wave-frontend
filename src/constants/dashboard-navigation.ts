@@ -1,7 +1,6 @@
 import { UserRole } from "@/types";
 import {
   BarChart3,
-  Bell,
   BookOpen,
   Briefcase,
   Building2,
@@ -204,114 +203,24 @@ export const DASHBOARD_NAVIGATION: RoleNavigation[] = [
     role: UserRole.RECRUITER,
     items: [
       {
-        title: "Dashboard",
-        url: "/recruiter",
-        icon: Home,
+        title: "Post New Job",
+        url: "/recruiter/jobs/add-job",
+        icon: PlusCircle,
       },
       {
-        title: "Job Posts",
-        url: "/recruiter/jobs",
+        title: "My Posted Jobs",
+        url: "/recruiter/my-posted-jobs",
         icon: Briefcase,
-        items: [
-          {
-            title: "All Jobs",
-            url: "/recruiter/jobs",
-            icon: Briefcase,
-          },
-          {
-            title: "Create Job",
-            url: "/recruiter/jobs/create",
-            icon: PlusCircle,
-          },
-          {
-            title: "Draft Jobs",
-            url: "/recruiter/jobs/drafts",
-            icon: FileText,
-            badge: "2",
-          },
-        ],
       },
       {
-        title: "Candidates",
-        url: "/recruiter/candidates",
-        icon: Users,
-        items: [
-          {
-            title: "Search Candidates",
-            url: "/recruiter/candidates/search",
-            icon: Search,
-          },
-          {
-            title: "Saved Candidates",
-            url: "/recruiter/candidates/saved",
-            icon: Heart,
-            badge: "15",
-          },
-          {
-            title: "Talent Pool",
-            url: "/recruiter/candidates/pool",
-            icon: Users,
-          },
-        ],
-      },
-      {
-        title: "Applications",
+        title: "Job Applications",
         url: "/recruiter/applications",
         icon: FileText,
-        badge: "23",
-        items: [
-          {
-            title: "New Applications",
-            url: "/recruiter/applications/new",
-            icon: Bell,
-            badge: "7",
-          },
-          {
-            title: "Under Review",
-            url: "/recruiter/applications/review",
-            icon: Eye,
-            badge: "12",
-          },
-          {
-            title: "Interviews",
-            url: "/recruiter/applications/interviews",
-            icon: Calendar,
-            badge: "4",
-          },
-        ],
-      },
-      {
-        title: "Company",
-        url: "/recruiter/company",
-        icon: Building2,
-        items: [
-          {
-            title: "Company Profile",
-            url: "/recruiter/company/profile",
-            icon: Building2,
-          },
-          {
-            title: "Team",
-            url: "/recruiter/company/team",
-            icon: Users,
-          },
-        ],
       },
       {
         title: "Analytics",
         url: "/recruiter/analytics",
         icon: BarChart3,
-      },
-      {
-        title: "Messages",
-        url: "/recruiter/messages",
-        icon: MessageSquare,
-        badge: "6",
-      },
-      {
-        title: "Settings",
-        url: "/recruiter/settings",
-        icon: Settings,
       },
     ],
   },

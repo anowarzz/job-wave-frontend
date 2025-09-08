@@ -1,6 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   Sidebar,
   SidebarContent,
@@ -14,35 +15,12 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { BarChart3, Briefcase, User, Users } from "lucide-react";
+import { getNavigationForRole } from "@/constants/dashboard-navigation";
+import { UserRole } from "@/types";
+import { User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useSWR from "swr";
-
-// Simple admin navigation
-const adminNavItems = [
-  {
-    title: "Analytics",
-    url: "/admin/analytics",
-    icon: BarChart3,
-  },
-
-  {
-    title: "All Candidates",
-    url: "/admin/all-candidates",
-    icon: User,
-  },
-  {
-    title: "All Recruiters",
-    url: "/admin/all-recruiters",
-    icon: Users,
-  },
-  {
-    title: "All Jobs",
-    url: "/admin/all-jobs",
-    icon: Briefcase,
-  },
-];
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -51,11 +29,52 @@ export function AppSidebar() {
   const { data, isLoading } = useSWR("/user/me");
   const user = data?.data;
 
+  const navigationItems = user?.role
+    ? getNavigationForRole(user.role as UserRole)
+    : [];
+
   const handleLinkClick = () => {
     if (isMobile) {
       setOpenMobile(false);
     }
     // On desktop, do nothing - keep sidebar open
+  };
+
+  const getDashboardTitle = (role: UserRole) => {
+    switch (role) {
+      case UserRole.ADMIN:
+        return "Admin Dashboard";
+      case UserRole.RECRUITER:
+        return "Recruiter Dashboard";
+      case UserRole.CANDIDATE:
+        return "Candidate Dashboard";
+      default:
+        return "Dashboard";
+    }
+  };
+
+  const renderNavigationItem = (item: any) => {
+    const isActive = pathname === item.url;
+
+    return (
+      <SidebarMenuItem key={item.title}>
+        <SidebarMenuButton asChild isActive={isActive} className="w-full">
+          <Link
+            href={item.url}
+            className="flex items-center gap-2"
+            onClick={handleLinkClick}
+          >
+            <item.icon className="h-4 w-4" />
+            <span>{item.title}</span>
+            {item.badge && (
+              <Badge variant="secondary" className="ml-auto text-xs">
+                {item.badge}
+              </Badge>
+            )}
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    );
   };
 
   return (
@@ -71,31 +90,16 @@ export function AppSidebar() {
             </div>
           </Link>
         </div>
-        <div className="text-xs text-muted-foreground">Admin Dashboard</div>
+        <div className="text-xs text-muted-foreground">
+          {user?.role ? getDashboardTitle(user.role as UserRole) : "Dashboard"}
+        </div>
       </SidebarHeader>
 
       <SidebarContent className="px-4">
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {adminNavItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.url}
-                    className="w-full"
-                  >
-                    <Link
-                      href={item.url}
-                      className="flex items-center gap-2"
-                      onClick={handleLinkClick}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {navigationItems.map((item) => renderNavigationItem(item))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -104,7 +108,7 @@ export function AppSidebar() {
       <SidebarFooter className="border-t px-4 py-4">
         <div className="flex items-center gap-3">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/avatar.jpg" alt="Admin" />
+            <AvatarImage src="/avatar.jpg" alt={user?.name || "User"} />
             <AvatarFallback>
               <User />
             </AvatarFallback>

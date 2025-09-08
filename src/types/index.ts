@@ -19,3 +19,19 @@ export interface IUser {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export type TJobType =
+  | "full-time"
+  | "part-time"
+  | "contract"
+  | "freelance"
+  | "internship";
+
+export interface IJob {
+  title: string;
+  description: string;
+  jobType: TJobType;
+  requiredSkills: string[];
+  location: string;
+  salaryRange: string;
+}
