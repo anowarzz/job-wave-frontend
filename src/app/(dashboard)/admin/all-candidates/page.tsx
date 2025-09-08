@@ -3,50 +3,69 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, MapPin, User } from "lucide-react";
-
-// Mock data for candidates (will be replaced with real API data later)
-const mockCandidates = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john.doe@email.com",
-    phone: "+1234567890",
-    address: "New York, NY",
-    role: "CANDIDATE",
-    isBlocked: false,
-    createdAt: "2024-01-15",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane.smith@email.com",
-    phone: "+1234567891",
-    address: "Los Angeles, CA",
-    role: "CANDIDATE",
-    isBlocked: false,
-    createdAt: "2024-01-14",
-  },
-  {
-    id: 3,
-    name: "Mike Johnson",
-    email: "mike.johnson@email.com",
-    phone: "+1234567892",
-    address: "Chicago, IL",
-    role: "CANDIDATE",
-    isBlocked: true,
-    createdAt: "2024-01-13",
-  },
-];
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Mail, MapPin, Shield, ShieldOff, Trash2, User } from "lucide-react";
+import useSWR from "swr";
 
 const AllCandidates = () => {
+  const { data, error, isLoading } = useSWR("/admin/all-candidates");
+
+  const candidates = data?.data || [];
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-3">
+          {[...Array(3)].map((_, i) => (
+            <Card key={i}>
+              <CardContent className="p-6">
+                <div className="animate-pulse">
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-8 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Loading candidates...</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="animate-pulse space-y-2">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="h-12 bg-gray-200 rounded"></div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-center text-red-600">
+              Error loading candidates: {error.message}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {/* Header Actions */}
-      <div className="flex justify-end">
-        <Button>Export Data</Button>
-      </div>
-
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
@@ -57,7 +76,7 @@ const AllCandidates = () => {
             <User className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockCandidates.length}</div>
+            <div className="text-2xl font-bold">{candidates.length}</div>
           </CardContent>
         </Card>
 
@@ -70,7 +89,7 @@ const AllCandidates = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockCandidates.filter((c) => !c.isBlocked).length}
+              {candidates.filter((c: any) => !c.isBlocked).length}
             </div>
           </CardContent>
         </Card>
@@ -84,7 +103,7 @@ const AllCandidates = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockCandidates.filter((c) => c.isBlocked).length}
+              {candidates.filter((c: any) => c.isBlocked).length}
             </div>
           </CardContent>
         </Card>
@@ -96,19 +115,41 @@ const AllCandidates = () => {
           <CardTitle>Candidates List</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {mockCandidates.map((candidate) => (
-              <div
-                key={candidate.id}
-                className="flex items-center justify-between p-4 border rounded-lg"
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <User className="h-5 w-5" />
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-medium">{candidate.name}</h3>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Address</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {candidates.length > 0 ? (
+                candidates.map((candidate: any) => (
+                  <TableRow key={candidate.id}>
+                    <TableCell>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                          <User className="h-4 w-4" />
+                        </div>
+                        <div className="font-medium">{candidate.name}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Mail className="h-3 w-3 text-muted-foreground" />
+                        {candidate.email}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3 text-muted-foreground" />
+                        {candidate.address}
+                      </div>
+                    </TableCell>
+                    <TableCell>
                       <Badge
                         variant={
                           candidate.isBlocked ? "destructive" : "secondary"
@@ -116,33 +157,47 @@ const AllCandidates = () => {
                       >
                         {candidate.isBlocked ? "Blocked" : "Active"}
                       </Badge>
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Mail className="h-3 w-3" />
-                        {candidate.email}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center gap-2 justify-end">
+                        <Button
+                          variant={
+                            candidate.isBlocked ? "default" : "destructive"
+                          }
+                          size="sm"
+                        >
+                          {candidate.isBlocked ? (
+                            <>
+                              <Shield className="h-3 w-3 mr-1" />
+                              Unblock
+                            </>
+                          ) : (
+                            <>
+                              <ShieldOff className="h-3 w-3 mr-1" />
+                              Block
+                            </>
+                          )}
+                        </Button>
+                        <Button variant="destructive" size="sm">
+                          <Trash2 className="h-3 w-3 mr-1" />
+                          Delete
+                        </Button>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {candidate.address}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    View Profile
-                  </Button>
-                  <Button
-                    variant={candidate.isBlocked ? "default" : "destructive"}
-                    size="sm"
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="text-center py-8 text-muted-foreground"
                   >
-                    {candidate.isBlocked ? "Unblock" : "Block"}
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
+                    No candidates found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>
