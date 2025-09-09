@@ -10,9 +10,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IJob } from "@/types";
+import baseApi from "@/lib/axios";
 import { Bookmark, Calendar, Eye, MapPin, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 import useSWR from "swr";
 
 const MySavedJobs = () => {
@@ -21,8 +22,8 @@ const MySavedJobs = () => {
     error,
     isLoading,
     mutate,
-  } = useSWR("/jobs/my-saved-jobs");
-  const savedJobs: IJob[] = savedJobsData?.data || [];
+  } = useSWR("/candidate/my-saved-jobs");
+  const savedJobs = savedJobsData?.data || [];
 
   // Format date
   const formatDate = (date: string | Date) => {
@@ -36,19 +37,21 @@ const MySavedJobs = () => {
 
   // Format job type
   const formatJobType = (jobType: string) => {
+    if (!jobType) return "N/A";
     return jobType.replace("-", " ").replace(/\b\w/g, (l) => l.toUpperCase());
   };
 
   // Handle remove from saved jobs
   const handleRemoveJob = async (jobId: string) => {
     try {
-      // Add your API call to remove from saved jobs here
-      // await fetch(`/api/jobs/unsave/${jobId}`, { method: 'DELETE' });
+      await baseApi.delete(`/candidate/remove-saved-job/${jobId}`);
 
-      // Optimistically update the UI
+      toast.success("Job removed from saved jobs");
+
       mutate();
     } catch (error) {
       console.error("Error removing job:", error);
+      toast.error("Failed to remove job. Please try again.");
     }
   };
 
@@ -150,61 +153,48 @@ const MySavedJobs = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {savedJobs.map((job) => (
-                <TableRow key={job._id}>
+              {savedJobs.map((savedJob: any) => (
+                <TableRow key={savedJob._id}>
                   <TableCell className="font-medium">
                     <div className="space-y-1">
                       <div className="font-semibold text-foreground">
-                        {job.title}
+                        {savedJob?.job?.title}
                       </div>
-                      <div className="flex gap-1 flex-wrap">
-                        {job.requiredSkills?.slice(0, 2).map((skill, index) => (
-                          <Badge
-                            key={index}
-                            variant="secondary"
-                            className="text-xs"
-                          >
-                            {skill}
-                          </Badge>
-                        ))}
-                        {job.requiredSkills?.length > 2 && (
-                          <Badge variant="outline" className="text-xs">
-                            +{job.requiredSkills.length - 2} more
-                          </Badge>
-                        )}
-                      </div>
+      
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="font-medium text-foreground">
-                      {job.recruiter?.name || job.company || "Company Name"}
+                      {savedJob?.job?.recruiter?.name ||
+                        savedJob.company ||
+                        "Company Name"}
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <MapPin className="h-4 w-4" />
-                      <span>{job.location}</span>
+                      <span>{savedJob?.job.location}</span>
                     </div>
                   </TableCell>
                   <TableCell>
                     <Badge variant="outline">
-                      {formatJobType(job.jobType)}
+                      {formatJobType(savedJob?.job?.jobType)}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <span className="font-medium text-foreground">
-                      {job.salaryRange || "Negotiable"}
+                      {savedJob?.job?.salaryRange || "Negotiable"}
                     </span>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <Calendar className="h-4 w-4" />
-                      <span>{formatDate(job.createdAt)}</span>
+                      <span>{formatDate(savedJob.createdAt)}</span>
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center gap-2 justify-end">
-                      <Link href={`/jobs/${job._id}`}>
+                      <Link href={`/jobs/${savedJob?.job?._id}`}>
                         <Button variant="outline" size="sm">
                           <Eye className="h-4 w-4 mr-1" />
                           View
@@ -213,7 +203,7 @@ const MySavedJobs = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleRemoveJob(job._id)}
+                        onClick={() => handleRemoveJob(savedJob?.job?._id)}
                         className="text-destructive hover:text-destructive"
                       >
                         <Trash2 className="h-4 w-4 mr-1" />

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { IJob } from "@/types";
-import { Bookmark, Clock, DollarSign, MapPin } from "lucide-react";
+import { Clock, DollarSign, MapPin } from "lucide-react";
 import Link from "next/link";
 
 const HotJobsCard = ({
@@ -13,7 +13,7 @@ const HotJobsCard = ({
 }) => {
   // Format salary range
   const formatSalary = (salaryRange: string) => {
-    return salaryRange || "₹30,000 - 50,000";
+    return salaryRange || "৳30,000 - 50,000";
   };
 
   // Get time ago
@@ -46,11 +46,6 @@ const HotJobsCard = ({
           Featured
         </div>
       )}
-
-      {/* Bookmark button */}
-      <button className="absolute top-4 right-4 p-1 rounded transition-all duration-300 text-muted-foreground hover:text-foreground">
-        <Bookmark size={18} />
-      </button>
 
       <div className="flex flex-col h-full">
         {/* Header with logo and title */}

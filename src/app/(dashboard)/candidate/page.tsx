@@ -30,12 +30,12 @@ import {
   Building,
   Calendar,
   Clock,
-  Eye,
   FileText,
   Filter,
   MapPin,
   Search,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import useSWR from "swr";
 
@@ -58,7 +58,7 @@ const getStatusColor = (status: string) => {
 };
 
 const formatStatus = (status: string) => {
-  if (!status) return "Unknown";
+  if (!status) return "Under Review";
 
   switch (status.toLowerCase()) {
     case "pending":
@@ -367,9 +367,11 @@ const MyApplications = () => {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="sm">
-                          <Eye className="h-4 w-4" />
-                        </Button>
+                        <Link href={`/jobs/${application.job._id}`}>
+                          <Button variant="ghost" size="sm">
+                            View
+                          </Button>
+                        </Link>
                       </TableCell>
                     </TableRow>
                   );

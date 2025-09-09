@@ -4,10 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import baseApi from "@/lib/axios";
 import { IJob } from "@/types";
 import {
   ArrowLeft,
   Bookmark,
+  BookMarked,
   Building,
   Calendar,
   Clock,
@@ -24,6 +26,7 @@ import useSWR from "swr";
 const JobDetails = () => {
   const params = useParams();
   const jobId = params.id as string;
+  const [isSaved, setIsSaved] = useState(false);
 
   // Fetch job details using SWR
   const { data, error, isLoading } = useSWR(`/jobs/${jobId}`);
@@ -33,6 +36,19 @@ const JobDetails = () => {
   // State for apply functionality
   const [isApplying, setIsApplying] = useState(false);
   const [hasApplied, setHasApplied] = useState(false);
+
+  //  save job
+  const handleSaveJob = async (jobId: string) => {
+    try {
+      const response = await baseApi.post(`/candidate/save-job/${jobId}`);
+      console.log("Job saved!", response.data);
+      setIsSaved(true);
+      toast.success("Job saved successfully!");
+    } catch (error: any) {
+      console.error("Save job error:", error.response?.data || error.message);
+      toast.error(error.response?.data?.message || "Failed to save job");
+    }
+  };
 
   // Apply for job function
   const applyForJob = async () => {
@@ -155,8 +171,22 @@ const JobDetails = () => {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
-                    <Bookmark className="h-4 w-4" />
+                  <Button
+                    onClick={() => handleSaveJob(job._id)}
+                    variant="outline"
+                    size="sm"
+                  >
+                    {isSaved ? (
+                      <>
+                        <BookMarked className="h-4 w-4 mr-2" />
+                        Saved
+                      </>
+                    ) : (
+                      <>
+                        <Bookmark className="h-4 w-4 mr-2" />
+                        Save
+                      </>
+                    )}
                   </Button>
                   <Button variant="outline" size="sm">
                     <Share2 className="h-4 w-4" />
