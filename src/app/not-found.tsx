@@ -48,8 +48,8 @@ export default function NotFound() {
             </h2>
 
             <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-md mx-auto">
-              The page you&apos;re looking for doesn&apos;t exist. It might have been
-              moved, deleted, or you entered the wrong URL.
+              The page you&apos;re looking for doesn&apos;t exist. It might have
+              been moved, deleted, or you entered the wrong URL.
             </p>
 
             {/* Illustration or Icon */}
@@ -78,7 +78,7 @@ export default function NotFound() {
                 </Button>
               </Link>
 
-              <Link href="/jobs">
+              <Link href="/all-jobs">
                 <Button
                   variant="outline"
                   size="lg"
@@ -102,7 +102,7 @@ export default function NotFound() {
               </p>
               <div className="flex flex-wrap justify-center gap-4 text-sm">
                 <Link
-                  href="/jobs"
+                  href="/all-jobs"
                   className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
                 >
                   Browse Jobs

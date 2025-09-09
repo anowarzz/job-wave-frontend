@@ -55,7 +55,7 @@ export default function UserMenu({ user }: { user: IUser }) {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <Link
-              href={`/user/profile/${user._id}`}
+              href={`/user/${user._id}`}
               className="flex items-center gap-2 w-full"
             >
               <User size={16} className="opacity-60" aria-hidden="true" />
