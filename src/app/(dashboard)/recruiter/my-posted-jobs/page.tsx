@@ -1,5 +1,6 @@
 "use client";
 
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,15 +20,60 @@ import {
 import { fetcher } from "@/lib/fetcher";
 import { IJob } from "@/types";
 import { ChevronDown, Filter, Loader2, Search } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
 import useSWR from "swr";
 
 const MyPostedJobs = () => {
-  const { data, error, isLoading } = useSWR(
+  const [deletingJobId, setDeletingJobId] = useState<string | null>(null);
+
+  const { data, error, isLoading, mutate } = useSWR(
     "/recruiter/my-posted-jobs",
     fetcher
   );
 
   const jobs = data?.data || [];
+
+  const handleDeleteJob = async (jobId: string, jobTitle: string) => {
+    if (deletingJobId) return;
+
+    setDeletingJobId(jobId);
+
+    try {
+      const API_BASE_URL =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1";
+
+      const response = await fetch(`${API_BASE_URL}/recruiter/jobs/${jobId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        let errorMessage = "Failed to delete job";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          errorMessage = `Failed to delete job: ${response.status} ${response.statusText}`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      // Show success message
+      toast.success("Job deleted successfully", {
+        description: `"${jobTitle}" has been permanently deleted.`,
+      });
+
+      // Refresh the jobs list
+      mutate();
+    } catch (error) {
+      console.error("Error deleting job:", error);
+      toast.error("Failed to delete job");
+    } finally {
+      setDeletingJobId(null);
+    }
+  };
 
   if (error) {
     return (
@@ -157,12 +203,33 @@ const MyPostedJobs = () => {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>View Details</DropdownMenuItem>
-                          <DropdownMenuItem>Edit Job</DropdownMenuItem>
-                          <DropdownMenuItem>View Applications</DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
-                            Delete
+                          <DropdownMenuItem>
+                            <Link href={`/jobs/${job._id}`}>View Details</Link>
                           </DropdownMenuItem>
+                          <DropdownMenuItem>Edit Job</DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link
+                              href={`/recruiter/jobs/${job._id}/applications`}
+                            >
+                              View Applications
+                            </Link>
+                          </DropdownMenuItem>
+                          <ConfirmationDialog
+                            description={`Are you sure you want to delete "${job.title}"? This action cannot be undone and will also delete all associated applications.`}
+                            onConfirm={() =>
+                              handleDeleteJob(job._id, job.title)
+                            }
+                          >
+                            <DropdownMenuItem
+                              className="text-red-600"
+                              onSelect={(e) => e.preventDefault()}
+                              disabled={deletingJobId === job._id}
+                            >
+                              {deletingJobId === job._id
+                                ? "Deleting..."
+                                : "Delete"}
+                            </DropdownMenuItem>
+                          </ConfirmationDialog>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

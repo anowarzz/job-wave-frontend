@@ -108,7 +108,6 @@ export function AppSidebar() {
       <SidebarFooter className="border-t px-4 py-4">
         <div className="flex items-center gap-3">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/avatar.jpg" alt={user?.name || "User"} />
             <AvatarFallback>
               <User />
             </AvatarFallback>

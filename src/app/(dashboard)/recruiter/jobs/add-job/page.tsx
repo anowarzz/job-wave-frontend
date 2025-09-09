@@ -17,6 +17,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { JobCategory } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,6 +46,9 @@ const jobSchema = z.object({
     "freelance",
     "internship",
   ] as const),
+  category: z.nativeEnum(JobCategory, {
+    message: "Please select a job category",
+  }),
   requiredSkills: z.string().min(1, "At least one skill is required"),
   location: z
     .string()
@@ -55,6 +66,7 @@ const AddNewJob = () => {
       title: "",
       description: "",
       jobType: "full-time",
+      category: JobCategory.WEB_DEVELOPMENT,
       requiredSkills: "",
       location: "",
       salaryRange: "",
@@ -207,6 +219,31 @@ const AddNewJob = () => {
                         </option>
                       </select>
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Job Category</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select a job category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {Object.entries(JobCategory).map(([key, value]) => (
+                          <SelectItem key={key} value={value}>
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
