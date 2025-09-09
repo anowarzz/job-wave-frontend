@@ -32,7 +32,8 @@ import useSWR from "swr";
 
 const AllRecruiters = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [loadingUserId, setLoadingUserId] = useState<string | null>(null);
+  const [blockingUserId, setBlockingUserId] = useState<string | null>(null);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
   const { data, error, isLoading, mutate } = useSWR("/admin/all-recruiters");
 
   const recruiters = data?.data || [];
@@ -46,7 +47,7 @@ const AllRecruiters = () => {
   // block recruiter
   const handleBlockUser = async (userId: string, userName: string) => {
     try {
-      setLoadingUserId(userId);
+      setBlockingUserId(userId);
       await baseApi.patch(`/admin/users/block/${userId}`);
 
       mutate();
@@ -56,14 +57,14 @@ const AllRecruiters = () => {
       console.error("Error blocking user:", error);
       toast.error(error?.response?.data?.message || "Failed to block user");
     } finally {
-      setLoadingUserId(null);
+      setBlockingUserId(null);
     }
   };
 
   // unblock recruiter
   const handleUnblockUser = async (userId: string, userName: string) => {
     try {
-      setLoadingUserId(userId);
+      setBlockingUserId(userId);
       await baseApi.patch(`/admin/users/unblock/${userId}`);
 
       // Update the local data optimistically
@@ -74,14 +75,14 @@ const AllRecruiters = () => {
       console.error("Error unblocking user:", error);
       toast.error(error?.response?.data?.message || "Failed to unblock user");
     } finally {
-      setLoadingUserId(null);
+      setBlockingUserId(null);
     }
   };
 
   // delete recruiter
   const handleDeleteUser = async (userId: string, userName: string) => {
     try {
-      setLoadingUserId(userId);
+      setDeletingUserId(userId);
       await baseApi.delete(`/admin/users/delete/${userId}`);
 
       // Update the local data optimistically
@@ -92,7 +93,7 @@ const AllRecruiters = () => {
       console.error("Error deleting user:", error);
       toast.error(error?.response?.data?.message || "Failed to delete user");
     } finally {
-      setLoadingUserId(null);
+      setDeletingUserId(null);
     }
   };
 
@@ -269,14 +270,14 @@ const AllRecruiters = () => {
                             recruiter.isBlocked ? "default" : "destructive"
                           }
                           size="sm"
-                          disabled={loadingUserId === recruiter._id}
+                          disabled={blockingUserId === recruiter._id}
                           onClick={() =>
                             recruiter.isBlocked
                               ? handleUnblockUser(recruiter._id, recruiter.name)
                               : handleBlockUser(recruiter._id, recruiter.name)
                           }
                         >
-                          {loadingUserId === recruiter._id ? (
+                          {blockingUserId === recruiter._id ? (
                             <>
                               <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full mr-1" />
                               {recruiter.isBlocked
@@ -304,9 +305,9 @@ const AllRecruiters = () => {
                           <Button
                             variant="destructive"
                             size="sm"
-                            disabled={loadingUserId === recruiter._id}
+                            disabled={deletingUserId === recruiter._id}
                           >
-                            {loadingUserId === recruiter._id ? (
+                            {deletingUserId === recruiter._id ? (
                               <>
                                 <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full mr-1" />
                                 Deleting...
