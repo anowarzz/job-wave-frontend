@@ -117,7 +117,7 @@ export function DashboardHeader({
 
         {/* User Profile Icon */}
         <Button variant="ghost" size="icon" asChild>
-          <Link href="/user/profile">
+          <Link href={`/user/profile/${user?._id || ""}`}>
             <User className="h-4 w-4" />
             <span className="sr-only">Profile</span>
           </Link>

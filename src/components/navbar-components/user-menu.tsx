@@ -1,6 +1,6 @@
 import { LogOutIcon, User, UserCircle } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,7 +25,7 @@ export default function UserMenu({ user }: { user: IUser }) {
       await logout();
       router.push("/");
     } catch (error) {
-        console.log("Logout error:", error);
+      console.log("Logout error:", error);
     }
   };
 
@@ -54,7 +54,10 @@ export default function UserMenu({ user }: { user: IUser }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <Link href="/user/profile" className="flex items-center gap-2 w-full">
+            <Link
+              href={`/user/profile/${user._id}`}
+              className="flex items-center gap-2 w-full"
+            >
               <User size={16} className="opacity-60" aria-hidden="true" />
               <span>Profile</span>
             </Link>

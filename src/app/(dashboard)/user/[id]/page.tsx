@@ -11,7 +11,7 @@ const UserProfile = () => {
 
   console.log("User ID:", userId);
 
-  const { data, error, isLoading } = useSWR(`/user/${userId}`, fetcher);
+  const { data, error, isLoading } = useSWR(`/user/${userId}`);
 
   const user = data?.data;
 
