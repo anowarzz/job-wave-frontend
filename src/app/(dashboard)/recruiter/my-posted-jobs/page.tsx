@@ -1,6 +1,7 @@
 "use client";
 
 import { ConfirmationDialog } from "@/components/ConfirmationDialog";
+import { EditJobModal } from "@/components/EditJobModal";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -27,6 +28,8 @@ import useSWR from "swr";
 
 const MyPostedJobs = () => {
   const [deletingJobId, setDeletingJobId] = useState<string | null>(null);
+  const [editingJob, setEditingJob] = useState<IJob | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data, error, isLoading, mutate } = useSWR(
     "/recruiter/my-posted-jobs",
@@ -35,6 +38,7 @@ const MyPostedJobs = () => {
 
   const jobs = data?.data || [];
 
+  // Delete  a job post
   const handleDeleteJob = async (jobId: string, jobTitle: string) => {
     if (deletingJobId) return;
 
@@ -73,6 +77,16 @@ const MyPostedJobs = () => {
     } finally {
       setDeletingJobId(null);
     }
+  };
+
+  // edit a job
+  const handleEditJob = (job: IJob) => {
+    setEditingJob(job);
+    setIsEditModalOpen(true);
+  };
+
+  const handleJobUpdated = () => {
+    mutate(); // Refresh the jobs list
   };
 
   if (error) {
@@ -204,9 +218,16 @@ const MyPostedJobs = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem>
-                            <Link href={`/jobs/${job._id}`}>View Details</Link>
+                            <Link href={`/jobs/${job._id}`}>View Job</Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>Edit Job</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onSelect={(e) => {
+                              e.preventDefault();
+                              handleEditJob(job);
+                            }}
+                          >
+                            Edit Job
+                          </DropdownMenuItem>
                           <DropdownMenuItem asChild>
                             <Link
                               href={`/recruiter/jobs/${job._id}/applications`}
@@ -266,6 +287,14 @@ const MyPostedJobs = () => {
           </div>
         </div>
       )}
+
+      {/* Edit Job Modal */}
+      <EditJobModal
+        job={editingJob}
+        open={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        onJobUpdated={handleJobUpdated}
+      />
     </div>
   );
 };
