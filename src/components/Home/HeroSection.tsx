@@ -12,16 +12,16 @@ const HeroSection = () => {
   console.log(data);
 
   return (
-    <div className="relative overflow-hidden min-h-[85vh] md:min-h-[80vh] lg:min-h-[85vh] flex items-center">
+    <div className="relative overflow-hidden min-h-[70vh] sm:min-h-[80vh] md:min-h-[85vh] flex items-center">
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-slate-900 z-0"></div>
 
       <div className="absolute inset-0 opacity-10 bg-grid-pattern z-0"></div>
 
-      <div className="container mx-auto px-4 py-12 z-10">
-        <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-16">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 z-10">
+        <div className="flex flex-col lg:flex-row-reverse items-center gap-6 sm:gap-8 lg:gap-16">
           <div className="flex-1 flex flex-col justify-center items-center relative">
-            <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-slate-500/20 dark:from-blue-600/15 dark:to-slate-700/15 rounded-full blur-3xl -z-10"></div>
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-slate-400/15 to-blue-400/15 dark:from-slate-700/15 dark:to-blue-600/15 rounded-full blur-3xl -z-10"></div>
+            <div className="absolute top-0 right-0 w-48 h-48 sm:w-72 sm:h-72 bg-gradient-to-br from-blue-400/20 to-slate-500/20 dark:from-blue-600/15 dark:to-slate-700/15 rounded-full blur-3xl -z-10"></div>
+            <div className="absolute bottom-0 left-0 w-52 h-52 sm:w-80 sm:h-80 bg-gradient-to-tr from-slate-400/15 to-blue-400/15 dark:from-slate-700/15 dark:to-blue-600/15 rounded-full blur-3xl -z-10"></div>
 
             <motion.div
               animate={{ y: [20, 60, 20] }}
@@ -30,7 +30,7 @@ const HeroSection = () => {
                 ease: "easeInOut",
                 repeat: Infinity,
               }}
-              className="max-w-sm w-64 rounded-t-[35px] rounded-br-[35px] border-l-4 border-b-4 border-blue-600 shadow-2xl overflow-hidden"
+              className="max-w-sm w-48 sm:w-56 md:w-64 rounded-t-[35px] rounded-br-[35px] border-l-4 border-b-4 border-blue-600 shadow-2xl overflow-hidden"
             >
               <Image
                 src="/assets/images/single-man-office.jpg"
@@ -49,7 +49,7 @@ const HeroSection = () => {
                 ease: "easeInOut",
                 repeat: Infinity,
               }}
-              className="hidden md:block md:max-w-sm w-64 rounded-t-[35px] rounded-br-[35px] border-l-4 border-b-4 border-slate-600 shadow-2xl overflow-hidden"
+              className="hidden md:block md:max-w-sm w-48 sm:w-56 md:w-64 rounded-t-[35px] rounded-br-[35px] border-l-4 border-b-4 border-slate-600 shadow-2xl overflow-hidden"
             >
               <Image
                 src="/assets/images/office-people.jpg"
@@ -63,8 +63,8 @@ const HeroSection = () => {
           </div>
 
           {/* Text content section */}
-          <div className="flex-1 my-6 lg:my-0 max-w-xl">
-            <div className="space-y-3 mb-6">
+          <div className="flex-1 my-4 sm:my-6 lg:my-0 max-w-xl px-2 sm:px-0">
+            <div className="space-y-3 mb-4 sm:mb-6">
               {/* Enhanced colorful badge with unique shape */}
               <motion.div
                 initial={{ opacity: 0, y: 20, rotate: -5 }}
@@ -73,7 +73,7 @@ const HeroSection = () => {
                 className="relative inline-block"
               >
                 <div
-                  className="px-5 py-2 font-medium text-sm text-white relative z-10 overflow-hidden"
+                  className="px-3 sm:px-5 py-2 font-medium text-xs sm:text-sm text-white relative z-10 overflow-hidden"
                   style={{
                     clipPath:
                       "polygon(0% 0%, 95% 0%, 100% 50%, 95% 100%, 0% 100%, 5% 50%)",
@@ -87,7 +87,7 @@ const HeroSection = () => {
                   <span className="relative z-10 flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1"
+                      className="h-3 w-3 sm:h-4 sm:w-4 mr-1"
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -119,7 +119,7 @@ const HeroSection = () => {
                   delay: 0.3,
                   ease: "easeOut",
                 }}
-                className="text-4xl md:text-5xl font-bold leading-tight whitespace-nowrap"
+                className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight"
               >
                 <span className="bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 dark:from-white dark:via-gray-300 dark:to-gray-100 bg-clip-text text-transparent">
                   Unlock Your
@@ -140,7 +140,7 @@ const HeroSection = () => {
                   delay: 0.5,
                   ease: "easeOut",
                 }}
-                className="py-4 text-gray-600 dark:text-gray-300 leading-relaxed text-base"
+                className="py-3 sm:py-4 text-gray-600 dark:text-gray-300 leading-relaxed text-sm sm:text-base"
               >
                 Discover career opportunities tailored to your skills and
                 aspirations. Our platform connects talented professionals with
@@ -157,11 +157,11 @@ const HeroSection = () => {
                 delay: 0.7,
                 ease: "easeOut",
               }}
-              className="flex flex-wrap gap-4 items-center"
+              className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-center"
             >
               <Link href="/register">
                 <Button
-                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-slate-600 text-white font-medium rounded-full shadow-md transition-all duration-300 
+                  className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-slate-600 text-white font-medium rounded-full shadow-md transition-all duration-300 
                 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50
                 hover:bg-gradient-to-r hover:from-slate-600 hover:to-blue-600 hover:shadow-lg hover:shadow-blue-500/30 dark:hover:shadow-blue-700/40"
                 >
@@ -171,7 +171,7 @@ const HeroSection = () => {
 
               <Link href="/all-jobs">
                 <Button
-                  className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium rounded-full shadow-sm border border-gray-300 dark:border-gray-600 transition-all duration-300
+                  className="w-full sm:w-auto px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium rounded-full shadow-sm border border-gray-300 dark:border-gray-600 transition-all duration-300
                 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-600 dark:hover:border-blue-500 hover:shadow-md"
                 >
                   Explore Jobs

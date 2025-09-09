@@ -128,7 +128,7 @@ const JobsCategoryBrowse = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 items-start">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 md:gap-8 items-start">
           {categories.map((category) => (
             <div
               key={category.id}
@@ -160,25 +160,25 @@ const JobsCategoryBrowse = () => {
                 </div>
 
                 {/* Title with animated underline */}
-                <h3 className="font-semibold text-xl mb-2 transition-colors group-hover:font-bold text-gray-800 group-hover:text-primary dark:text-white dark:group-hover:text-purple-300 relative inline-block">
+                <h3 className="font-semibold  md:text-xl mb-2 transition-colors group-hover:font-bold text-gray-800  dark:text-white dark:gro-colors   group-hover:text-primary dark:group-hover:text-purple-300 relative inline-block">
                   {category.title}
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-500 ease-out group-hover:w-full bg-primary dark:bg-purple-400"></span>
                 </h3>
 
                 {/* Jobs count with enhanced design */}
-                <p className="text-sm text-gray-500 dark:text-gray-400 transition-all duration-500">
+                {/* <p className="text-sm text-gray-500 dark:text-gray-400 transition-all duration-500">
                   <span className="font-medium text-base text-primary dark:text-purple-300 group-hover:text-lg transition-all duration-500">
                     {category.count}
                   </span>{" "}
                   Jobs Available
-                </p>
+                </p> */}
 
                 {/* View Jobs button with fixed height to prevent card stretching */}
-                <div className="h-10 mt-4 flex justify-center items-center">
+                {/* <div className="h-10 mt-4 flex justify-center items-center">
                   <button className="text-sm font-medium py-1.5 px-4 rounded-full transition-all duration-500 opacity-0 group-hover:opacity-100 bg-gray-100 text-primary hover:bg-primary hover:text-white dark:bg-gray-700 dark:text-purple-300 dark:hover:bg-purple-700 dark:hover:text-white">
                     View Jobs
                   </button>
-                </div>
+                </div> */}
               </div>
             </div>
           ))}
@@ -186,9 +186,11 @@ const JobsCategoryBrowse = () => {
 
         <div className="text-center mt-14">
           <Link href="/all-jobs">
-            <Button className="font-medium py-3.5 px-12 rounded-full relative overflow-hidden group bg-gradient-to-r from-primary to-blue-600 dark:from-purple-600 dark:to-indigo-600 text-white">
-              <span className="relative z-10">View All Categories Job</span>
-              <span className="absolute inset-0 w-0 h-full transition-all duration-300 ease-out bg-blue-500 dark:bg-indigo-500 left-0 group-hover:w-full"></span>
+            <Button className="font-medium py-3.5 px-12 rounded-full relative overflow-hidden group bg-gradient-to-r from-primary to-blue-600 dark:from-purple-600 dark:to-blue-500 text-white shadow-lg hover:shadow-xl dark:shadow-purple-500/25 dark:hover:shadow-purple-500/40 transition-all duration-300 border border-transparent dark:border-purple-400/30">
+              <span className="relative z-10 drop-shadow-sm">
+                View All Categories Job
+              </span>
+              <span className="absolute inset-0 w-0 h-full transition-all duration-300 ease-out bg-blue-500 dark:bg-gradient-to-r dark:from-purple-500 dark:to-blue-400 left-0 group-hover:w-full"></span>
             </Button>
           </Link>
         </div>

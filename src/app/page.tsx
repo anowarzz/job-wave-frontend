@@ -1,3 +1,4 @@
+import CallToAction from "@/components/Home/CallToAction";
 import HeroSection from "@/components/Home/HeroSection";
 import HotJobs from "@/components/Home/HotJobs";
 import HowItWorks from "@/components/Home/HowItWorks";
@@ -12,6 +13,7 @@ export default function Home() {
       <JobsCategoryBrowse />
       <HotJobs />
       <FAQ />
+      <CallToAction />
     </div>
   );
 }
