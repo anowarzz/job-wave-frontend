@@ -34,7 +34,6 @@ export default function UserMenu({ user }: { user: IUser }) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
           <Avatar>
-            <AvatarImage src="./avatar.jpg" alt="Profile image" />
             <AvatarFallback>
               <UserCircle size="24" />
             </AvatarFallback>

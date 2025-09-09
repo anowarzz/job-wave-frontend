@@ -2,6 +2,8 @@
 
 import { motion, Variants } from "framer-motion";
 import { FileText, Search, Trophy, UserPlus } from "lucide-react";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
 const HowItWorks = () => {
   const steps = [
@@ -145,12 +147,19 @@ const HowItWorks = () => {
             Ready to take the next step in your career?
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-              Get Started Today
-            </button>
-            <button className="px-8 py-4 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-blue-500 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:text-blue-400 font-semibold rounded-xl transition-all duration-300">
-              Learn More
-            </button>
+            <Link href="/register">
+              <Button className="px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+                Get Started Today
+              </Button>
+            </Link>
+            <Link href="/about">
+              <Button
+                variant="outline"
+                className="px-8 py-4 border-2 font-semibold rounded-xl transition-all duration-300"
+              >
+                Learn More
+              </Button>
+            </Link>
           </div>
         </motion.div>
       </div>

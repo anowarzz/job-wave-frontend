@@ -16,8 +16,6 @@ export function SWRProvider({ children }: SWRProviderProps) {
         revalidateOnReconnect: true,
         refreshInterval: 0,
         dedupingInterval: 2000,
-        errorRetryCount: 3,
-        errorRetryInterval: 1000,
         onError: (error) => {
           console.error("SWR Error:", error);
         },

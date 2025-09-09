@@ -1,6 +1,7 @@
 import { UserRole } from "@/types";
 import {
   BarChart3,
+  Bookmark,
   Briefcase,
   Building2,
   File,
@@ -57,6 +58,11 @@ export const DASHBOARD_NAVIGATION: RoleNavigation[] = [
         title: "My Applications",
         url: "/candidate/my-applications",
         icon: File,
+      },
+      {
+        title: "Saved Jobs",
+        url: "/candidate/saved-jobs",
+        icon: Bookmark,
       },
     ],
   },

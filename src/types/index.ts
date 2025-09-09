@@ -33,12 +33,17 @@ export interface IJob {
   _id: string;
   title: string;
   description: string;
-  recruiter?: string;
+  recruiter?: {
+    name?: string;
+    email?: string;
+    phone?: string;
+  };
+  company?: string;
   jobType: TJobType;
   requiredSkills: string[];
   location: string;
   status: TJobStatus;
   salaryRange: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 }

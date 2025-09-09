@@ -11,6 +11,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useState } from "react";
+import { Button } from "../ui/button";
 
 const JobsCategoryBrowse = () => {
   const [categories] = useState([
@@ -117,7 +118,7 @@ const JobsCategoryBrowse = () => {
       {/* Main content */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 transition-colors bg-gradient-to-r from-blue-500 to-indigo-500 dark:from-gray-200 dark:via-amber-800 dark:to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-4xl font-bold mb-4 transition-colors bg-gradient-to-r dark:text-white/45 bg-clip-text text-black">
             Find Jobs in Popular Categories
           </h2>
           <p className="max-w-2xl mx-auto text-gray-900 dark:text-gray-300 transition-colors">
@@ -183,10 +184,10 @@ const JobsCategoryBrowse = () => {
         </div>
 
         <div className="text-center mt-14">
-          <button className="font-medium py-3.5 px-12 rounded-full relative overflow-hidden group bg-gradient-to-r from-primary to-blue-600 dark:from-purple-600 dark:to-indigo-600 text-white">
+          <Button className="font-medium py-3.5 px-12 rounded-full relative overflow-hidden group bg-gradient-to-r from-primary to-blue-600 dark:from-purple-600 dark:to-indigo-600 text-white">
             <span className="relative z-10">View All Categories</span>
             <span className="absolute inset-0 w-0 h-full transition-all duration-300 ease-out bg-blue-500 dark:bg-indigo-500 left-0 group-hover:w-full"></span>
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 "use client";
- 
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import Lottie from "lottie-react";
 import { Eye, EyeOff } from "lucide-react";
@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import baseApi from "@/lib/axios";
 import Link from "next/link";
 
 const loginSchema = z.object({
@@ -47,39 +48,27 @@ const Login = () => {
   const onSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
 
-    const API_BASE_URL =
-      process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1";
-
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          email: values.email,
-          password: values.password,
-        }),
+      const response = await baseApi.post("/auth/login", {
+        email: values.email,
+        password: values.password,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.log(data);
-        return toast.error(data.message || "Login failed");
-      }
-
       toast.success("Login successful", { position: "bottom-right" });
-
-      // Invalidate user data cache to update navbar
       mutate("/user/me");
+
+      console.log(response.data);
+      
 
       // Redirect to home page
       router.push("/");
     } catch (error: any) {
-      console.error("Login error:", error);
-      toast.error(error.message || "Invalid credentials. Please try again.");
+      console.error("Login error:", error.response?.data || error.message);
+      toast.error(
+        error.response?.data?.message ||
+          "Invalid credentials. Please try again.",
+        { position: "bottom-right" }
+      );
     } finally {
       setIsLoading(false);
     }
