@@ -75,16 +75,19 @@ const CallToAction = () => {
                   <Button
                     type="submit"
                     disabled={isLoading || !email}
-                    className="h-10 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium"
+                    className="font-medium py-3.5 px-12 rounded-full relative overflow-hidden group bg-gradient-to-r from-primary to-blue-600 dark:from-purple-600 dark:to-blue-500 text-white shadow-lg hover:shadow-xl dark:shadow-purple-500/25 dark:hover:shadow-purple-500/40 transition-all duration-300 border border-transparent dark:border-purple-400/30"
                   >
-                    {isLoading ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        Subscribing...
-                      </div>
-                    ) : (
-                      "Subscribe"
-                    )}
+                    <span className="relative z-10 drop-shadow-sm">
+                      {isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          Subscribing...
+                        </div>
+                      ) : (
+                        "Subscribe"
+                      )}
+                    </span>
+                    <span className="absolute inset-0 w-0 h-full transition-all duration-300 ease-out bg-blue-500 dark:bg-gradient-to-r dark:from-purple-500 dark:to-blue-400 left-0 group-hover:w-full"></span>
                   </Button>
                 </div>
                 <p className="text-xs text-gray-500 dark:text-gray-400">

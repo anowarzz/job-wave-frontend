@@ -148,8 +148,11 @@ const HowItWorks = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/register">
-              <Button className="px-8 py-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
-                Get Started Today
+              <Button className="font-medium py-3.5 px-12 rounded-full relative overflow-hidden group bg-gradient-to-r from-primary to-blue-600 dark:from-purple-600 dark:to-blue-500 text-white shadow-lg hover:shadow-xl dark:shadow-purple-500/25 dark:hover:shadow-purple-500/40 transition-all duration-300 border border-transparent dark:border-purple-400/30">
+                <span className="relative z-10 drop-shadow-sm">
+                  Get Started Today
+                </span>
+                <span className="absolute inset-0 w-0 h-full transition-all duration-300 ease-out bg-blue-500 dark:bg-gradient-to-r dark:from-purple-500 dark:to-blue-400 left-0 group-hover:w-full"></span>
               </Button>
             </Link>
             <Link href="/about">

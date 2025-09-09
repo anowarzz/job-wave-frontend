@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import baseApi from "@/lib/axios";
-import { IJob } from "@/types";
+import { IJob, UserRole } from "@/types";
 import {
   ArrowLeft,
   Bookmark,
@@ -30,6 +30,11 @@ const JobDetails = () => {
 
   // Fetch job details using SWR
   const { data, error, isLoading } = useSWR(`/jobs/${jobId}`);
+
+  // Get user authentication status
+  const { data: userData } = useSWR("/user/me");
+  const user = userData?.data;
+  const isAuthenticated = !!user;
 
   const job: IJob = data?.data;
 
@@ -288,22 +293,38 @@ const JobDetails = () => {
           {/* Apply Button */}
           <Card>
             <CardContent className="pt-6">
-              <Button
-                className="w-full"
-                size="lg"
-                disabled={job.status !== "open" || hasApplied || isApplying}
-                onClick={applyForJob}
-              >
-                {isApplying
-                  ? "Applying..."
-                  : hasApplied
-                  ? "Applied"
-                  : job.status === "open"
-                  ? "Apply Now"
-                  : "Job Closed"}
-              </Button>
+              {!isAuthenticated ? (
+                <Link href="/login">
+                  <Button className="w-full" size="lg">
+                    Login to Apply
+                  </Button>
+                </Link>
+              ) : user?.role !== UserRole.CANDIDATE ? (
+                <Button className="w-full" size="lg" disabled={true}>
+                  Only Candidates Can Apply
+                </Button>
+              ) : (
+                <Button
+                  className="w-full"
+                  size="lg"
+                  disabled={job.status !== "open" || hasApplied || isApplying}
+                  onClick={applyForJob}
+                >
+                  {isApplying
+                    ? "Applying..."
+                    : hasApplied
+                    ? "Applied"
+                    : job.status === "open"
+                    ? "Apply Now"
+                    : "Job Closed"}
+                </Button>
+              )}
               <p className="text-xs text-muted-foreground text-center mt-2">
-                {hasApplied
+                {!isAuthenticated
+                  ? "Please login to apply for this job"
+                  : user?.role !== UserRole.CANDIDATE
+                  ? "Only candidates are allowed to apply for jobs"
+                  : hasApplied
                   ? "Your application has been submitted"
                   : "Quick and easy application process"}
               </p>
