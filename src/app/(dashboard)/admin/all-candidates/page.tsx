@@ -1,5 +1,5 @@
 "use client";
- 
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import baseApi from "@/lib/axios";
 import {
   Mail,
   MapPin,
@@ -22,11 +23,13 @@ import {
   User,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import useSWR from "swr";
 
 const AllCandidates = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { data, error, isLoading } = useSWR("/admin/all-candidates");
+  const [loadingUserId, setLoadingUserId] = useState<string | null>(null);
+  const { data, error, isLoading, mutate } = useSWR("/admin/all-candidates");
 
   const candidates = data?.data || [];
 
@@ -34,6 +37,41 @@ const AllCandidates = () => {
     e.preventDefault();
     // You can use searchQuery here for your search functionality
     console.log("Search query:", searchQuery);
+  };
+
+  // block candidate
+  const handleBlockUser = async (userId: string, userName: string) => {
+    try {
+      setLoadingUserId(userId);
+      await baseApi.patch(`/admin/users/block/${userId}`);
+
+      mutate();
+
+      toast.success(`${userName} has been blocked successfully`);
+    } catch (error: any) {
+      console.error("Error blocking user:", error);
+      toast.error(error?.response?.data?.message || "Failed to block user");
+    } finally {
+      setLoadingUserId(null);
+    }
+  };
+
+  // unblock candidate
+  const handleUnblockUser = async (userId: string, userName: string) => {
+    try {
+      setLoadingUserId(userId);
+      await baseApi.patch(`/admin/users/unblock/${userId}`);
+
+      // Update the local data optimistically
+      mutate();
+
+      toast.success(`${userName} has been unblocked successfully`);
+    } catch (error: any) {
+      console.error("Error unblocking user:", error);
+      toast.error(error?.response?.data?.message || "Failed to unblock user");
+    } finally {
+      setLoadingUserId(null);
+    }
   };
 
   if (isLoading) {
@@ -195,8 +233,21 @@ const AllCandidates = () => {
                             candidate.isBlocked ? "default" : "destructive"
                           }
                           size="sm"
+                          disabled={loadingUserId === candidate._id}
+                          onClick={() =>
+                            candidate.isBlocked
+                              ? handleUnblockUser(candidate._id, candidate.name)
+                              : handleBlockUser(candidate._id, candidate.name)
+                          }
                         >
-                          {candidate.isBlocked ? (
+                          {loadingUserId === candidate._id ? (
+                            <>
+                              <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full mr-1" />
+                              {candidate.isBlocked
+                                ? "Unblocking..."
+                                : "Blocking..."}
+                            </>
+                          ) : candidate.isBlocked ? (
                             <>
                               <Shield className="h-3 w-3 mr-1" />
                               Unblock

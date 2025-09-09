@@ -35,11 +35,11 @@ const AdminAnalytics = () => {
 
   if (error) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-10">
         <Card>
           <CardContent className="p-6">
             <div className="text-center text-red-600">
-              Error loading analytics: {error.message}
+              Error loading : {error.message}
             </div>
           </CardContent>
         </Card>

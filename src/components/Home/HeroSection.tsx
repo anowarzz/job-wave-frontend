@@ -2,18 +2,14 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import useSWR from "swr";
+import { Button } from "../ui/button";
 
 const HeroSection = () => {
+  const { data } = useSWR("/jobs/all-jobs");
 
-
-const {data}  = useSWR("/jobs/all-jobs");
-
-console.log(data);
-
-
-
-
+  console.log(data);
 
   return (
     <div className="relative overflow-hidden min-h-[85vh] md:min-h-[80vh] lg:min-h-[85vh] flex items-center">
@@ -74,7 +70,6 @@ console.log(data);
                 initial={{ opacity: 0, y: 20, rotate: -5 }}
                 animate={{ opacity: 1, y: 0, rotate: 0 }}
                 transition={{ duration: 0.8 }}
-                
                 className="relative inline-block"
               >
                 <div
@@ -164,20 +159,24 @@ console.log(data);
               }}
               className="flex flex-wrap gap-4 items-center"
             >
-              <button
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-slate-600 text-white font-medium rounded-full shadow-md transition-all duration-300 
+              <Link href="/register">
+                <Button
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-slate-600 text-white font-medium rounded-full shadow-md transition-all duration-300 
                 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50
                 hover:bg-gradient-to-r hover:from-slate-600 hover:to-blue-600 hover:shadow-lg hover:shadow-blue-500/30 dark:hover:shadow-blue-700/40"
-              >
-                Get Started
-              </button>
+                >
+                  Get Started
+                </Button>
+              </Link>
 
-              <button
-                className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium rounded-full shadow-sm border border-gray-300 dark:border-gray-600 transition-all duration-300
+              <Link href="/all-jobs">
+                <Button
+                  className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium rounded-full shadow-sm border border-gray-300 dark:border-gray-600 transition-all duration-300
                 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 hover:border-blue-600 dark:hover:border-blue-500 hover:shadow-md"
-              >
-                Explore Jobs
-              </button>
+                >
+                  Explore Jobs
+                </Button>
+              </Link>
             </motion.div>
           </div>
         </div>

@@ -125,7 +125,7 @@ const HotJobs = () => {
             <div className="p-2 rounded-lg bg-primary/20">
               <FireExtinguisher className="text-xl text-primary" />
             </div>
-            <h2 className="text-4xl font-bold text-foreground transition-colors">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground transition-colors">
               Hot Jobs <span className="text-primary">Today</span>
             </h2>
           </div>
