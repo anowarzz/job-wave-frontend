@@ -1,5 +1,6 @@
 "use client";
- 
+
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,27 +13,87 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import baseApi from "@/lib/axios";
 import {
   Building2,
+  ExternalLink,
   Mail,
   MapPin,
   Search,
   Shield,
   ShieldOff,
   Trash2,
+  User,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 import useSWR from "swr";
 
 const AllRecruiters = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { data, error, isLoading } = useSWR("/admin/all-recruiters");
+  const [loadingUserId, setLoadingUserId] = useState<string | null>(null);
+  const { data, error, isLoading, mutate } = useSWR("/admin/all-recruiters");
 
   const recruiters = data?.data || [];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // You can use searchQuery here for your search functionality
     console.log("Search query:", searchQuery);
+  };
+
+  // block recruiter
+  const handleBlockUser = async (userId: string, userName: string) => {
+    try {
+      setLoadingUserId(userId);
+      await baseApi.patch(`/admin/users/block/${userId}`);
+
+      mutate();
+
+      toast.success(`${userName} has been blocked successfully`);
+    } catch (error: any) {
+      console.error("Error blocking user:", error);
+      toast.error(error?.response?.data?.message || "Failed to block user");
+    } finally {
+      setLoadingUserId(null);
+    }
+  };
+
+  // unblock recruiter
+  const handleUnblockUser = async (userId: string, userName: string) => {
+    try {
+      setLoadingUserId(userId);
+      await baseApi.patch(`/admin/users/unblock/${userId}`);
+
+      // Update the local data optimistically
+      mutate();
+
+      toast.success(`${userName} has been unblocked successfully`);
+    } catch (error: any) {
+      console.error("Error unblocking user:", error);
+      toast.error(error?.response?.data?.message || "Failed to unblock user");
+    } finally {
+      setLoadingUserId(null);
+    }
+  };
+
+  // delete recruiter
+  const handleDeleteUser = async (userId: string, userName: string) => {
+    try {
+      setLoadingUserId(userId);
+      await baseApi.delete(`/admin/users/delete/${userId}`);
+
+      // Update the local data optimistically
+      mutate();
+
+      toast.success(`${userName} has been deleted successfully`);
+    } catch (error: any) {
+      console.error("Error deleting user:", error);
+      toast.error(error?.response?.data?.message || "Failed to delete user");
+    } finally {
+      setLoadingUserId(null);
+    }
   };
 
   if (isLoading) {
@@ -151,6 +212,7 @@ const AllRecruiters = () => {
                 <TableHead>Email</TableHead>
                 <TableHead>Location</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Profile</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -187,6 +249,19 @@ const AllRecruiters = () => {
                         {recruiter.isBlocked ? "Blocked" : "Active"}
                       </Badge>
                     </TableCell>
+                    <TableCell>
+                      <Link href={`/user/${recruiter._id}`}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-1"
+                        >
+                          <User className="h-3 w-3" />
+                          View Profile
+                          <ExternalLink className="h-3 w-3" />
+                        </Button>
+                      </Link>
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center gap-2 justify-end">
                         <Button
@@ -194,8 +269,21 @@ const AllRecruiters = () => {
                             recruiter.isBlocked ? "default" : "destructive"
                           }
                           size="sm"
+                          disabled={loadingUserId === recruiter._id}
+                          onClick={() =>
+                            recruiter.isBlocked
+                              ? handleUnblockUser(recruiter._id, recruiter.name)
+                              : handleBlockUser(recruiter._id, recruiter.name)
+                          }
                         >
-                          {recruiter.isBlocked ? (
+                          {loadingUserId === recruiter._id ? (
+                            <>
+                              <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full mr-1" />
+                              {recruiter.isBlocked
+                                ? "Unblocking..."
+                                : "Blocking..."}
+                            </>
+                          ) : recruiter.isBlocked ? (
                             <>
                               <Shield className="h-3 w-3 mr-1" />
                               Unblock
@@ -207,10 +295,30 @@ const AllRecruiters = () => {
                             </>
                           )}
                         </Button>
-                        <Button variant="destructive" size="sm">
-                          <Trash2 className="h-3 w-3 mr-1" />
-                          Delete
-                        </Button>
+                        <ConfirmationDialog
+                          description={`This will permanently delete ${recruiter.name} from the system. This action cannot be undone.`}
+                          onConfirm={() =>
+                            handleDeleteUser(recruiter._id, recruiter.name)
+                          }
+                        >
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            disabled={loadingUserId === recruiter._id}
+                          >
+                            {loadingUserId === recruiter._id ? (
+                              <>
+                                <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full mr-1" />
+                                Deleting...
+                              </>
+                            ) : (
+                              <>
+                                <Trash2 className="h-3 w-3 mr-1" />
+                                Delete
+                              </>
+                            )}
+                          </Button>
+                        </ConfirmationDialog>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -218,7 +326,7 @@ const AllRecruiters = () => {
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={5}
+                    colSpan={6}
                     className="text-center py-8 text-muted-foreground"
                   >
                     No recruiters found

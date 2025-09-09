@@ -2,12 +2,20 @@
 
 import { fetcher } from "@/lib/fetcher";
 import { User } from "lucide-react";
+import { useParams } from "next/navigation";
 import useSWR from "swr";
 
-const Profile = () => {
-  const { data, error, isLoading } = useSWR("/user/me", fetcher);
+const UserProfile = () => {
+  const params = useParams();
+  const userId = params.id as string;
+
+  console.log("User ID:", userId);
+
+  const { data, error, isLoading } = useSWR(`/user/${userId}`, fetcher);
 
   const user = data?.data;
+
+  console.log("User data:", user);
 
   if (isLoading) {
     return (
@@ -22,6 +30,19 @@ const Profile = () => {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <p className="text-muted-foreground">Failed to load profile data</p>
+          <p className="text-sm text-red-500 mt-2">
+            {error?.message || "Something went wrong"}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <p className="text-muted-foreground">User not found</p>
         </div>
       </div>
     );
@@ -120,4 +141,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

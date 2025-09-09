@@ -36,6 +36,12 @@ export function DashboardHeader({
     const segments = pathname.split("/").filter(Boolean);
     const lastSegment = segments[segments.length - 1];
 
+    // Handle specific route patterns
+    if (pathname.startsWith("/user/") && segments.length === 2) {
+      // This is a user profile page like /user/[id]
+      return "User Profile";
+    }
+
     if (
       lastSegment === "admin" ||
       lastSegment === "candidate" ||

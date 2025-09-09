@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import baseApi from "@/lib/axios";
 import {
+  ExternalLink,
   Mail,
   MapPin,
   Search,
@@ -23,6 +24,7 @@ import {
   Trash2,
   User,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import useSWR from "swr";
@@ -209,6 +211,7 @@ const AllCandidates = () => {
                 <TableHead>Email</TableHead>
                 <TableHead>Address</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Profile</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -244,6 +247,19 @@ const AllCandidates = () => {
                       >
                         {candidate.isBlocked ? "Blocked" : "Active"}
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Link href={`/user/${candidate._id}`}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-1"
+                        >
+                          <User className="h-3 w-3" />
+                          View Profile
+                          <ExternalLink className="h-3 w-3" />
+                        </Button>
+                      </Link>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center gap-2 justify-end">
@@ -309,7 +325,7 @@ const AllCandidates = () => {
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={5}
+                    colSpan={6}
                     className="text-center py-8 text-muted-foreground"
                   >
                     No candidates found
