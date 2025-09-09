@@ -1,5 +1,6 @@
 "use client";
- 
+
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,13 +19,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import baseApi from "@/lib/axios";
 import { Briefcase, Filter, MapPin, Search, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 import useSWR from "swr";
 
 const AllJobs = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const { data, error, isLoading } = useSWR("/jobs/all-jobs");
+  const [deletingJobId, setDeletingJobId] = useState<string | null>(null);
+  const { data, error, isLoading, mutate } = useSWR("/jobs/all-jobs");
 
   const jobs = data?.data || [];
 
@@ -32,6 +37,26 @@ const AllJobs = () => {
     e.preventDefault();
     // You can use searchQuery here for your search functionality
     console.log("Search query:", searchQuery);
+  };
+
+  const handleDeleteJob = async (jobId: string) => {
+    setDeletingJobId(jobId);
+
+    try {
+      await baseApi.delete(`/admin/jobs/delete/${jobId}`);
+
+      mutate();
+
+      toast.success("Job deleted successfully");
+    } catch (error: any) {
+      console.error("Error deleting job:", error);
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to delete job. Please try again."
+      );
+    } finally {
+      setDeletingJobId(null);
+    }
   };
 
   if (isLoading) {
@@ -194,13 +219,26 @@ const AllJobs = () => {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center gap-2 justify-end">
-                        <Button variant="outline" size="sm">
-                          View
-                        </Button>
-                        <Button variant="destructive" size="sm">
-                          <Trash2 className="h-3 w-3 mr-1" />
-                          Delete
-                        </Button>
+                        <Link href={`/jobs/${job._id}`}>
+                          <Button variant="outline" size="sm">
+                            View
+                          </Button>
+                        </Link>
+                        <ConfirmationDialog
+                          description="This action cannot be undone. This will permanently delete the job and all related applications."
+                          onConfirm={() => handleDeleteJob(job._id)}
+                        >
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            disabled={deletingJobId === job._id}
+                          >
+                            <Trash2 className="h-3 w-3 mr-1" />
+                            {deletingJobId === job._id
+                              ? "Deleting..."
+                              : "Delete"}
+                          </Button>
+                        </ConfirmationDialog>
                       </div>
                     </TableCell>
                   </TableRow>
