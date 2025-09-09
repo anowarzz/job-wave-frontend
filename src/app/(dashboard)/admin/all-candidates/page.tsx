@@ -1,5 +1,6 @@
 "use client";
 
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -69,6 +70,24 @@ const AllCandidates = () => {
     } catch (error: any) {
       console.error("Error unblocking user:", error);
       toast.error(error?.response?.data?.message || "Failed to unblock user");
+    } finally {
+      setLoadingUserId(null);
+    }
+  };
+
+  // delete candidate
+  const handleDeleteUser = async (userId: string, userName: string) => {
+    try {
+      setLoadingUserId(userId);
+      await baseApi.delete(`/admin/users/delete/${userId}`);
+
+      // Update the local data optimistically
+      mutate();
+
+      toast.success(`${userName} has been deleted successfully`);
+    } catch (error: any) {
+      console.error("Error deleting user:", error);
+      toast.error(error?.response?.data?.message || "Failed to delete user");
     } finally {
       setLoadingUserId(null);
     }
@@ -259,10 +278,30 @@ const AllCandidates = () => {
                             </>
                           )}
                         </Button>
-                        <Button variant="destructive" size="sm">
-                          <Trash2 className="h-3 w-3 mr-1" />
-                          Delete
-                        </Button>
+                        <ConfirmationDialog
+                          description={`This will permanently delete ${candidate.name} from the system. This action cannot be undone.`}
+                          onConfirm={() =>
+                            handleDeleteUser(candidate._id, candidate.name)
+                          }
+                        >
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            disabled={loadingUserId === candidate._id}
+                          >
+                            {loadingUserId === candidate._id ? (
+                              <>
+                                <div className="animate-spin h-3 w-3 border border-current border-t-transparent rounded-full mr-1" />
+                                Deleting...
+                              </>
+                            ) : (
+                              <>
+                                <Trash2 className="h-3 w-3 mr-1" />
+                                Delete
+                              </>
+                            )}
+                          </Button>
+                        </ConfirmationDialog>
                       </div>
                     </TableCell>
                   </TableRow>
