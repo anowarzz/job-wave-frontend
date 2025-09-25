@@ -44,28 +44,34 @@ const Login = () => {
     },
   });
 
-  // Test user credentials
   const testCredentials = {
     admin: {
-      email: "admin@jobwave.com",
-      password: "Admin@123",
+      email: process.env.NEXT_PUBLIC_TEST_ADMIN_EMAIL || "",
+      password: process.env.NEXT_PUBLIC_TEST_ADMIN_PASSWORD || "",
     },
     recruiter: {
-      email: "mail@hero.com",
-      password: "Anowar@123",
+      email: process.env.NEXT_PUBLIC_TEST_RECRUITER_EMAIL || "",
+      password: process.env.NEXT_PUBLIC_TEST_RECRUITER_PASSWORD || "",
     },
     candidate: {
-      email: "anowar@mail.com",
-      password: "Candidate@123",
+      email: process.env.NEXT_PUBLIC_TEST_CANDIDATE_EMAIL || "",
+      password: process.env.NEXT_PUBLIC_TEST_CANDIDATE_PASSWORD || "",
     },
   };
 
   // Handle quick login
-  const handleQuickLogin = (role: 'admin' | 'recruiter' | 'candidate') => {
+  const handleQuickLogin = (role: "admin" | "recruiter" | "candidate") => {
     const credentials = testCredentials[role];
+
+    if (!credentials.email || !credentials.password) {
+      toast.error("something went wrong. please use manual loigin", {
+        position: "bottom-right",
+      });
+      return;
+    }
+
     form.setValue("email", credentials.email);
     form.setValue("password", credentials.password);
-    // Auto-submit the form after a brief delay to show the credentials being filled
     setTimeout(() => {
       form.handleSubmit(onSubmit)();
     }, 500);
@@ -85,7 +91,6 @@ const Login = () => {
       mutate("/user/me");
 
       console.log(response.data);
-      
 
       // Redirect to home page
       router.push("/");
@@ -241,7 +246,7 @@ const Login = () => {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => handleQuickLogin('admin')}
+                    onClick={() => handleQuickLogin("admin")}
                     disabled={isLoading}
                     className="w-full text-sm py-2 hover:bg-primary/5 transition-colors"
                   >
@@ -253,7 +258,7 @@ const Login = () => {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => handleQuickLogin('recruiter')}
+                    onClick={() => handleQuickLogin("recruiter")}
                     disabled={isLoading}
                     className="w-full text-sm py-2 hover:bg-primary/5 transition-colors"
                   >
@@ -265,7 +270,7 @@ const Login = () => {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => handleQuickLogin('candidate')}
+                    onClick={() => handleQuickLogin("candidate")}
                     disabled={isLoading}
                     className="w-full text-sm py-2 hover:bg-primary/5 transition-colors"
                   >
