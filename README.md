@@ -2,7 +2,7 @@
 
 Job Wave is a comprehensive job portal platform designed to connect job seekers with employers seamlessly. Built with modern web technologies, it provides an intuitive interface for candidates to find opportunities and for recruiters to discover talent.
 
-## 🌐 Live Demo
+## 🌐 Live Site
 
 **[Visit Job Wave](https://jobwave-dun.vercel.app)** - Experience the platform live on Vercel
 
@@ -139,6 +139,25 @@ Run the linter to check code quality:
 ```bash
 pnpm lint
 ```
+
+## Test Credentials
+
+For testing purposes, use the following pre-configured accounts:
+
+### Admin Account
+
+- **Email:** admin@jobwave.com
+- **Password:** Admin@123
+
+### Recruiter Account
+
+- **Email:** mail@hero.com
+- **Password:** Anowar@123
+
+### Candidate Account
+
+- **Email:** anowar@mail.com
+- **Password:** Candidate@123
 
 ## Project Structure
 

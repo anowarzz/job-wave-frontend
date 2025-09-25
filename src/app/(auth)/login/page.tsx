@@ -44,6 +44,33 @@ const Login = () => {
     },
   });
 
+  // Test user credentials
+  const testCredentials = {
+    admin: {
+      email: "admin@jobwave.com",
+      password: "Admin@123",
+    },
+    recruiter: {
+      email: "mail@hero.com",
+      password: "Anowar@123",
+    },
+    candidate: {
+      email: "anowar@mail.com",
+      password: "Candidate@123",
+    },
+  };
+
+  // Handle quick login
+  const handleQuickLogin = (role: 'admin' | 'recruiter' | 'candidate') => {
+    const credentials = testCredentials[role];
+    form.setValue("email", credentials.email);
+    form.setValue("password", credentials.password);
+    // Auto-submit the form after a brief delay to show the credentials being filled
+    setTimeout(() => {
+      form.handleSubmit(onSubmit)();
+    }, 500);
+  };
+
   // Handle Login
   const onSubmit = async (values: LoginFormValues) => {
     setIsLoading(true);
@@ -193,17 +220,61 @@ const Login = () => {
                 </form>
               </Form>
 
-              {/* <div className="mt-6 relative text-muted-foreground">
+              {/* Quick Login Section */}
+              <div className="mt-6 relative text-muted-foreground">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-border"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-card">Or continue with</span>
+                  <span className="px-2 bg-card">Quick Demo Login</span>
                 </div>
-              </div> */}
+              </div>
 
-              <div className="mt-6">
-                {/* Social Login Component would go here */}
+              <div className="mt-6 space-y-3">
+                <p className="text-sm text-muted-foreground text-center">
+                  Test the platform with different roles
+                </p>
+                <p className="text-xs text-muted-foreground/70 text-center px-2">
+                  💡 Enable third-party cookies for optimal experience
+                </p>
+                <div className="grid grid-cols-1 gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleQuickLogin('admin')}
+                    disabled={isLoading}
+                    className="w-full text-sm py-2 hover:bg-primary/5 transition-colors"
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                      Login as Admin
+                    </div>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleQuickLogin('recruiter')}
+                    disabled={isLoading}
+                    className="w-full text-sm py-2 hover:bg-primary/5 transition-colors"
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                      Login as Recruiter
+                    </div>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleQuickLogin('candidate')}
+                    disabled={isLoading}
+                    className="w-full text-sm py-2 hover:bg-primary/5 transition-colors"
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                      Login as Candidate
+                    </div>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

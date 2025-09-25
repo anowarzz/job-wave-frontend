@@ -36,11 +36,14 @@ const navigationLinks = [
 ];
 
 export default function Navbar() {
-  const { data: userData, isLoading } = useSWR("/user/me");
+  const { data: userData, isLoading, isValidating } = useSWR("/user/me");
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const user = userData?.data;
   const userRole = user?.role;
+
+  // Only show loading on initial load, not on background revalidations
+  const showLoading = isLoading && !userData;
 
   return (
     <header className="sticky top-0 z-50 border-b px-4 md:px-6 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -91,7 +94,7 @@ export default function Navbar() {
                 </nav>
                 <div className="mt-6 pt-6 border-t">
                   <div className="flex flex-col space-y-4 px-4">
-                    {isLoading ? (
+                    {showLoading ? (
                       <div className="w-8 h-8 animate-spin rounded-full border-2 border-primary border-t-transparent mx-auto" />
                     ) : user && user.email ? (
                       <div className="flex flex-col space-y-3 items-center">
@@ -175,7 +178,7 @@ export default function Navbar() {
           </div>
 
           {/* Conditional rendering with loading state */}
-          {isLoading ? (
+          {showLoading ? (
             <div className="w-8 h-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           ) : user && user.email ? (
             <UserMenu user={user} />
